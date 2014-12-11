@@ -46,6 +46,7 @@ classdef CCMParams
     properties (Dependent)
         Vcell   % volume of cell
         Vcsome  % volume of carboxysome
+        SAcell  % surface area of the cell
         
         % Dependent paramters for the case that CA & RuBisCO are uniformly 
         % co-localized to the carboxysome.
@@ -92,6 +93,10 @@ classdef CCMParams
         end
         function value = get.Vcsome(obj)
             value = 4*pi*obj.Rc^3/3;
+        end
+        
+        function value = get.SAcell(obj)
+            value = 4*pi*obj.Rb^2;
         end
         
         function value = get.VmaxCsome(obj)

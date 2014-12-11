@@ -19,6 +19,7 @@ classdef CCMParams_NoCsome < CCMParams
         Vmax    % uM/s RuBisCO max reaction rate/concentration (inside csome)
         Vba     % maximum rate of bicarbonate dehydration by CA (inside csome)
         Vca     % maximum rate of carbon dioxide hydration by CA (inside csome)
+        G 
     end
     
     methods

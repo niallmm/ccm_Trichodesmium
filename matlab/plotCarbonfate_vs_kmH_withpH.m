@@ -32,8 +32,8 @@ for i =  1:length(pH)
     % Run the model
     executor = FullCCMModelExecutor(ccm_params);
     res = executor.RunAnalytical();
-    Hin(i) = res.Hin;
-    CratewO(i) = res.CratewO;
+    Hin(i) = res.Hin_pm;
+    CratewO(i) = res.CratewO_pm;
     Ccyto(i) = res.c_cyto_uM;
     Ccsome(i) = res.c_csome_uM;
 end
@@ -52,8 +52,8 @@ for i =  1:length(pH)
     % Run the model
     executor = NoCsomeModelExecutor(ccm_params_cell);
     res = executor.RunAnalytical();
-    Hin_cy(i) = res.Hin;
-    CratewO_cy(i) = res.CratewO;
+    Hin_cy(i) = res.Hin_pm;
+    CratewO_cy(i) = res.CratewO_pm;
     Ccyto_cy(i) = res.c_cyto_uM;
 end
 
@@ -71,8 +71,8 @@ for i =  1:length(pH)
     
     executor = NoCsomeModelExecutor(ccm_params_just_rbc);
     res = executor.RunAnalytical();
-    Hin_just_rbc(i) = res.Hin;
-    CratewO_just_rbc(i) = res.CratewO;
+    Hin_just_rbc(i) = res.Hin_pm;
+    CratewO_just_rbc(i) = res.CratewO_pm;
     Ccyto_just_rbc(i) = res.c_cyto_uM;
 end
 

@@ -15,7 +15,7 @@ classdef NumericalCCMModelSolution
         c_mM;           % mM concentration of co2 over time and space.
         
         fintime;        % final time of the numerical solution -- needs to be long enough to get to steady state
-        t;              % niall?
+        t;              % vector of time values the numerical solver solved at -- this is only meaningful to check that we reached steady state
         r;              % radial points for concentration values.
     end
     

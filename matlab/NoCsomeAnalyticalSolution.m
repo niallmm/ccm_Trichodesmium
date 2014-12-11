@@ -9,16 +9,25 @@ classdef NoCsomeAnalyticalSolution
         h_cyto_mM;      % mM concentration of total bicarbonate.
         c_cyto_mM;      % mM concentration of co2.
         
-        % Document values and units here.
-        VO;
-        CratewO;
-        OratewC;
-        Hin;
-        Hleak;
-        Cleak;
-        Ccyto;
-        Hcyto;
-        error;
+        % =================================================================
+        % Calculate CO2 and O2 fixation rates for whole cell
+        VO;             % [uM/s] maximum rate of oxygen fixation calculated from the specificity of RuBisCO 
+        % intgrated over cell volume 
+        CratewO_um;        % [um/s] rate of CO2 fixation with oxygen accounted for
+        OratewC_um;        % [um/s] rate of O2 fication with CO2 accounted for
+        CratewO_pm;        % [pmole/s] rate of CO2 fixation with oxygen accounted for
+        OratewC_pm;        % [pmole/s] rate of O2 fication with CO2 accounted for
+        % =================================================================
+        % Calculate CO2 and HCO3- flux rates at cell membrane
+        % integrated over surface area of cell 
+        Hin_pm;            % [pmole/s] rate of active uptake of HCO3- jc*Hout
+        Hleak_pm;          % [pmole/s] rate of HCO3- leakage out of cell kmH*(Hout-Hcyto)
+        Cleak_pm;          % [pmole/s] rate of CO2 leakage out of cell kmC*(Cout-Ccyto)
+        Hin_um;            % [um/s] 
+        Hleak_um;          % [um/s]
+        Cleak_um;          % [um/s]
+        
+        error;             % the proportion of oxygen fixations to total fixation events
     end
     
     methods
@@ -48,14 +57,23 @@ classdef NoCsomeAnalyticalSolution
                 H = obj.h_cyto_uM;
                 %CAunsat = 1
             end
-
+            
             obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
-            obj.CratewO = p.Vmax*C./(C+p.Km*(1+p.O/p.KO)); % 1e3 converts from uM*cm^3/s to pmoles/s
-            obj.OratewC = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km));
-            obj.Hin = p.jc*p.Hout*1e3*4*pi*p.Rb^2;  % 1e3 converts from uM*cm^3/s to pmoles/s
-            obj.Hleak = p.kmH*(p.Hout - obj.h_cyto_uM)*1e3*4*pi*p.Rb^2;
-            obj.Cleak = p.kmC*(p.Cout - obj.c_cyto_uM)*1e3*4*pi*p.Rb^2;
-            obj.error = obj.OratewC/(obj.CratewO+obj.OratewC);
+            
+            obj.CratewO_pm = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcell*1e3; 
+            obj.CratewO_um = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcell*1e-3; % convert from uM*cm^3 to umoles
+            obj.OratewC_pm = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcell*1e3;
+            obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcell*1e-3;
+            
+            obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3; 
+            obj.Hleak_pm = p.kmH*(p.Hout - h_cyto_uM)*p.SAcell*1e3;
+            obj.Cleak_pm = p.kmC*(p.Cout - c_cyto_uM)*p.SAcell*1e3;
+            
+            obj.Hin_um = p.jc*p.Hout*p.SAcell*1e-3; 
+            obj.Hleak_um = p.kmH*(p.Hout - h_cyto_uM)*p.SAcell*1e-3;
+            obj.Cleak_um = p.kmC*(p.Cout - c_cyto_uM)*p.SAcell*1e-3;
+            
+            obj.error = obj.OratewC_pm/(obj.CratewO_pm + obj.OratewC_pm);
         end
     end
     
