@@ -29,7 +29,7 @@ Ccyto_ncsome_mM = ana_res_ncsome.c_cyto_mM;
 
 % Params for the no CCM case (no CA, no active transport, no cbsome)
 p_nccm = CCMParams_NoCsome();
-p_nccm.NCA = 1e-4;
+p_nccm.NCA = 1e-6;
 p_nccm.jc = 0;
 
 % Numerical solution for no CCM case
