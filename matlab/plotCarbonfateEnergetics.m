@@ -11,14 +11,18 @@ cost_fixation = 4*3.0 + 10*2.0;
 all_ones = ones(size(pH));
 
 % Cost of 2PG recovery through the C2 pathway is:
-% -- 1/2 fixed carbon (one decarboxylation for every two 2PG).
+% -- 1/2 carbon fixation (one decarboxylation for every two 2PG).
 % -- 1 ATP (one dephosphorylation for every 2PG). 
 % -- 1 NADH (one oxidation for every 2PG).
 % -- 1/2 amination (one net deamination for every two 2PG).
 % 4 H+ per ATP, 10 H+ per NADPH based on assumptions of
 % ATP synthase stoichiometry and ETC H+ pumping.
-% NOTE: Have not included cost reaminating.
-cost_per_2pg = (10 + 4 + 0.5*cost_fixation);
+% Cost of re-aminating assumed to be 1 ATP + 1 NADPH based on the
+% assumption that glutamine synthetase/glutamate synthase pathway is the
+% primary pathway of ammonium incorporation as in E. coli and that
+% glutamate is the product of that pathway. 
+cost_per_amination = 4 + 10;
+cost_per_2pg = (10 + 4 + 0.5*cost_fixation + 0.5*cost_per_amination);
 
 % Fraction of RuBisCO reactions that are oxygenations.
 % Specificity ratio as defined by Savir et al. 2010. 
@@ -55,7 +59,7 @@ legend('Transport', 'Fixation', 'Photorespiration', 'Total Cost');
 figure(6)
 area(pH, total_cost_cy_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
 hold on;
-area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
+area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
 area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
 plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
@@ -69,7 +73,7 @@ legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost');
 figure(7)
 area(pH, total_cost_just_rbc_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
 hold on;
-area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
+area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
 area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
 plot(pH, total_cost_just_rbc_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
