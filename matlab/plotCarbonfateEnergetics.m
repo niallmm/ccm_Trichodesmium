@@ -14,10 +14,10 @@ all_ones = ones(size(pH));
 % -- 1/2 fixed carbon (one decarboxylation for every two 2PG).
 % -- 1 ATP (one dephosphorylation for every 2PG). 
 % -- 1 NADH (one oxidation for every 2PG).
-% -- 1/2 fixed nitrogen (one net deamination for every two 2PG).
+% -- 1/2 amination (one net deamination for every two 2PG).
 % 4 H+ per ATP, 10 H+ per NADPH based on assumptions of
 % ATP synthase stoichiometry and ETC H+ pumping.
-% NOTE: Have not included cost of losing the amine. May be significant. 
+% NOTE: Have not included cost reaminating.
 cost_per_2pg = (10 + 4 + 0.5*cost_fixation);
 
 % Fraction of RuBisCO reactions that are oxygenations.
