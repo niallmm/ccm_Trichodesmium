@@ -62,29 +62,27 @@ classdef FullCCMAnalyticalSolution
             % determine whether CA is saturated and choose apporpriate
             % analytic solution
             diff = Ccsomep - CCAsat0;
-            if  Ccsomep > CCAsat0 || (abs(diff)/(Ccsomep+CCAsat0) <1e-3)
+            if  Ccsomep>CCAsat0 || abs(diff)/(Ccsomep+CCAsat0) <1e-3
                 obj.c_csome_uM = CCAsat0;
                 obj.h_csome_uM = HCAsat0;
-                warning('Carbonic anhydrase is unsaturated, so if you are trying to use the pH dependence this is bad')
-%                 csat = 1
+                %csat(i) = 1;
             elseif Ccsomep<CCAsat0
                 obj.c_csome_uM = Ccsomep;
                 obj.h_csome_uM = Hcsome;
-%                 CAunsat =1
+                %CAunsat =1
             end
             
             % concentration in the cytosol at r = Rb
-            obj.c_cyto_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)*p.G/...
-                ((p.alpha+p.kmC)*p.G + p.D/p.Rb^2) +obj.c_csome_uM;
+            obj.c_cyto_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*C(i))*G/...
+                ((alpha+kmC)*G + D/Rb^2) + C(i);
             
-           obj.h_cyto_uM = ((p.jc+p.kmH)*p.Hout + p.alpha*obj.c_cyto_uM - ...
-               p.kmH*obj.h_csome_uM)*p.G/(p.kmH*p.G + p.D/p.Rb^2)+obj.h_csome_uM;
+           obj.h_cyto_uM = ((jc+kmH)*p.Hout + alpha*CcytoRb(i) - kmH*H(i))*G/(kmH*G + D/Rb^2)+H(i);
             
            % unit conversion to mM
-           obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
-            obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
-            obj.h_csome_mM = obj.h_csome_uM * 1e-3;
-            obj.c_csome_mM = obj.c_csome_uM * 1e-3;
+           obj.h_cyto_mM = h_cyto_uM * 1e-3;
+            obj.c_cyto_mM = c_cyto_uM * 1e-3;
+            obj.h_csome_mM = h_csome_uM * 1e-3;
+            obj.c_csome_mM = c_csome_uM * 1e-3;
             
             p = ccm_params;
             C = obj.c_csome_uM;
@@ -95,11 +93,11 @@ classdef FullCCMAnalyticalSolution
             obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e-3;
             
             obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3;
-            obj.Hleak_pm = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e3;
-            obj.Cleak_pm = p.kmC*(p.Cout - obj.c_cyto_uM)*p.SAcell*1e3;
+            obj.Hleak_pm = p.kmH*(p.Hout - h_cyto_uM)*p.SAcell*1e3;
+            obj.Cleak_pm = p.kmC*(p.Cout - c_cyto_uM)*p.SAcell*1e3;
             obj.Hin_um = p.jc*p.Hout*p.SAcell*1e-3;
-            obj.Hleak_um = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e-3;
-            obj.Cleak_um = p.kmC*(p.Cout - obj.c_cyto_uM)*p.SAcell*1e-3;
+            obj.Hleak_um = p.kmH*(p.Hout - h_cyto_uM)*p.SAcell*1e-3;
+            obj.Cleak_um = p.kmC*(p.Cout - c_cyto_uM)*p.SAcell*1e-3;
             
             obj.error = obj.OratewC_pm/(obj.CratewO_pm + obj.OratewC_pm);
         end

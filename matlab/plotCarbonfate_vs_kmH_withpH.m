@@ -36,6 +36,7 @@ for i =  1:length(pH)
     CratewO(i) = res.CratewO_pm;
     Ccyto(i) = res.c_cyto_uM;
     Ccsome(i) = res.c_csome_uM;
+    Hcsome(i) = res.h_csome_uM;
 end
 
 % Calculate carbon fate for cells w/o carboxysomes
@@ -81,7 +82,7 @@ cost_h = Hin./CratewO;
 cost_cy_h = Hin_cy./CratewO_cy;
 cost_just_rbc_h = Hin_just_rbc./CratewO_just_rbc;
 
-figure(1)
+figure(2)
 loglog(kmH, cost_h, 'Color', 'k', 'LineWidth', 3);
 hold on
 text(10*kmH(end), 1.7*cost_h(end), 'CCM cost', 'Color', 'r');
@@ -137,4 +138,11 @@ set(haxes2, 'XDir','Reverse')
 axis([pH(1) pH(end) 1e-1 2e7])
 ylabel('Energetic Cost H^+ / (CO_2 fixed)')
 xlabel('Cytoplasmic pH')
+
+figure(111)
+plot(pH, Ccsome, 'r')
+hold on
+plot(pH, Hcsome, 'b')
+xlabel('pH')
+ylabel('inorganic carbon')
 
