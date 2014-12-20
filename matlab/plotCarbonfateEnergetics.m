@@ -8,6 +8,7 @@ cost_just_rbc_h = Hin_just_rbc./CratewO_just_rbc;
 % 4 H+ per ATP, 10 H+ per NADPH based on assumptions of
 % ATP synthase stoichiometry and ETC H+ pumping.
 cost_fixation = 4*3.0 + 10*2.0;
+all_ones = ones(size(pH));
 
 % Cost of 2PG recovery through the C2 pathway is:
 % -- 1/2 fixed carbon (one decarboxylation for every two 2PG).
@@ -44,11 +45,39 @@ area(pH, cost_fixation + cost_2pg_ccm_h, 'FaceColor', 'g', 'BaseValue', 1e-1);
 area(pH, cost_2pg_ccm_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
 plot(pH, total_cost_ccm_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
-axis([pH(1) pH(end) 1e-1 2e7]);
+axis([pH(1) pH(end) 1e-1 2e8]);
 ylabel('Energetic Cost H^+ / (CO_2 fixed)');
 xlabel('Cytoplasmic pH');
 title('Energetic Cost of the Cyanobacterial CCM');
 legend('Transport', 'Fixation', 'Photorespiration', 'Total Cost');
+
+% Cost breakdown of the cytosolic enzymes model as a function of pH.
+figure(6)
+area(pH, total_cost_cy_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
+plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+ylabel('Energetic Cost H^+ / (CO_2 fixed)');
+xlabel('Cytoplasmic pH');
+title('Energetic Cost of Fixing using RuBisCO Alone');
+legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost');
+
+% Cost breakdown of the cytosolic enzymes model as a function of pH.
+figure(7)
+area(pH, total_cost_just_rbc_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
+plot(pH, total_cost_just_rbc_h, '-k', 'LineWidth', 3);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+ylabel('Energetic Cost H^+ / (CO_2 fixed)');
+xlabel('Cytoplasmic pH');
+title('Energetic Cost of CA+RuBisCO in Cytosol');
+legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost');
 
 figure(2)
 loglog(kmH, cost_h, 'Color', 'k', 'LineWidth', 3);
