@@ -11,7 +11,7 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 
 % We are sweeping over cytoplasmic pH and calculating implied
 % permeabilities of the cell membrane to bicarbonate.
-pH = linspace(2, 11, 30);
+pH = linspace(2, 9.5, 30);
 kmH = zeros(30);
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
