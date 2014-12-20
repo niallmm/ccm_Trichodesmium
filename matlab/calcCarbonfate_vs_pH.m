@@ -11,6 +11,8 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 
 % We are sweeping over cytoplasmic pH and calculating implied
 % permeabilities of the cell membrane to bicarbonate.
+% Note: we are ignoring the second pKa of carbonic acid which is at 
+% about pH 10.3, so we shouldn't consider pHs too near that. 
 pH = linspace(2, 9.5, 30);
 kmH = zeros(30);
 
