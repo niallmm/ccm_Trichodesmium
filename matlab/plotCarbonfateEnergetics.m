@@ -27,6 +27,7 @@ cost_per_2pg = (10 + 4 + 0.5*cost_fixation + 0.5*cost_per_amination);
 % Fraction of RuBisCO reactions that are oxygenations.
 % Specificity ratio as defined by Savir et al. 2010. 
 % S = (RC/RO)([O2]/[CO2]) => RO/RC = [O2]/(S [CO2])
+% TODO: check that RuBisCO is saturated in all cases here.
 frac_oxygenation_ccm = ccm_params.O ./ (Ccsome .* ccm_params.S_sat);
 frac_oxygenation_cy = ccm_params_cell.O ./ (Ccyto_cy .* ccm_params_cell.S_sat);
 frac_oxygenation_just_rbc = ccm_params_just_rbc.O ./ (Ccyto_just_rbc .* ccm_params_just_rbc.S_sat);
@@ -43,44 +44,43 @@ total_cost_just_rbc_h = cost_2pg_just_rbc_h + cost_just_rbc_h + cost_fixation;
 
 % Cost breakdown of the ccm model as a function of pH.
 figure(5)
-area(pH, total_cost_ccm_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
+subplot(1,3,1);
+area(pH, total_cost_ccm_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
 hold on;
-area(pH, cost_fixation + cost_2pg_ccm_h, 'FaceColor', 'g', 'BaseValue', 1e-1);
-area(pH, cost_2pg_ccm_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
+area(pH, cost_fixation + cost_2pg_ccm_h, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+area(pH, cost_2pg_ccm_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
 plot(pH, total_cost_ccm_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
 axis([pH(1) pH(end) 1e-1 2e8]);
 ylabel('Energetic Cost H^+ / (CO_2 fixed)');
 xlabel('Cytoplasmic pH');
-title('Energetic Cost of the Cyanobacterial CCM');
-legend('Transport', 'Fixation', 'Photorespiration', 'Total Cost');
+title('Full CCM');
 
 % Cost breakdown of the cytosolic enzymes model as a function of pH.
-figure(6)
-area(pH, total_cost_cy_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
+subplot(1,3,2);
+area(pH, total_cost_cy_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
 hold on;
-area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
-area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
+area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
 plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
 axis([pH(1) pH(end) 1e-1 2e8]);
-ylabel('Energetic Cost H^+ / (CO_2 fixed)');
+set(gca, 'YTick', []);
 xlabel('Cytoplasmic pH');
-title('Energetic Cost of Fixing using RuBisCO Alone');
-legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost');
+title('Reactions in Cytosol');
 
 % Cost breakdown of the cytosolic enzymes model as a function of pH.
-figure(7)
-area(pH, total_cost_just_rbc_h, 'FaceColor', 'm', 'BaseValue', 1e-1);
+subplot(1,3,3);
+area(pH, total_cost_just_rbc_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
 hold on;
-area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', 'k', 'BaseValue', 1e-1);
-area(pH, all_ones .* cost_fixation, 'FaceColor', 'g', 'BaseValue', 1e-1);
+area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
 plot(pH, total_cost_just_rbc_h, '-k', 'LineWidth', 3);
 set(gca, 'Yscale', 'log');
 axis([pH(1) pH(end) 1e-1 2e8]);
-ylabel('Energetic Cost H^+ / (CO_2 fixed)');
+set(gca, 'YTick', []);
 xlabel('Cytoplasmic pH');
-title('Energetic Cost of CA+RuBisCO in Cytosol');
+title('RuBisCO Alone');
 legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost');
 
 figure(2)
