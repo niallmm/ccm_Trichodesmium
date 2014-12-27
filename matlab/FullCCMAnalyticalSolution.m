@@ -31,6 +31,12 @@ classdef FullCCMAnalyticalSolution
         Hleak_um;          % [um/s]
         Cleak_um;          % [um/s]
         
+        %==================================================================
+        % CO2 and HCO3- concentrations across the cell
+        r;
+        h_cyto_rad_uM;
+        c_cyto_rad_uM;
+        
         error;             % the proportion of oxygen fixations to total fixation events
     end
     
@@ -79,6 +85,15 @@ classdef FullCCMAnalyticalSolution
             
            obj.h_cyto_uM = ((p.jc+p.kmH)*p.Hout + p.alpha*obj.c_cyto_uM - ...
                p.kmH*obj.h_csome_uM)*p.G/(p.kmH*p.G + p.D/p.Rb^2)+obj.h_csome_uM;
+           % concentration across the cell
+           obj.r = linspace(p.Rc, p.Rb, 100);
+           obj.c_cyto_rad_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)...
+               *(p.D/(p.k*p.Rc^2) + 1/p.Rc - 1./obj.r)/...
+                ((p.alpha+p.kmC)*p.G + p.D/p.Rb^2) +obj.c_csome_uM;
+           obj.h_cyto_rad_uM = ((p.jc+p.kmH)*p.Hout + p.alpha*obj.c_cyto_uM - ...
+               p.kmH*obj.h_csome_uM)*(p.D/(p.k*p.Rc^2) + 1/p.Rc - 1./obj.r)...
+               /(p.kmH*p.G + p.D/p.Rb^2)+obj.h_csome_uM;
+
             
            % unit conversion to mM
            obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
@@ -86,7 +101,7 @@ classdef FullCCMAnalyticalSolution
             obj.h_csome_mM = obj.h_csome_uM * 1e-3;
             obj.c_csome_mM = obj.c_csome_uM * 1e-3;
             
-            p = ccm_params;
+
             C = obj.c_csome_uM;
             obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
             obj.CratewO_pm = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e3;
@@ -102,6 +117,7 @@ classdef FullCCMAnalyticalSolution
             obj.Cleak_um = p.kmC*(p.Cout - obj.c_cyto_uM)*p.SAcell*1e-3;
             
             obj.error = obj.OratewC_pm/(obj.CratewO_pm + obj.OratewC_pm);
+           
         end
         
     end
