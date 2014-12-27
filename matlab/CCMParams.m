@@ -125,7 +125,6 @@ classdef CCMParams
         
         function value = get.Keq(obj)
             value = exp(-obj.delGHC/obj.RT - log(10)*obj.pH);
-            % value = exp(-obj.delGHC/obj.RT - log(10)*8);
             % second term is deltaH*log(10)*pH, where deltaH = 1 from
             % HCO3- -> H20+CO2
         end
