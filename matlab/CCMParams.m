@@ -18,7 +18,7 @@ classdef CCMParams
 
         kRub = 26;           % rxns/s maximum reaction rate at single active site
         NRub = 2160;         % number of RuBisCO active sites
-        Km = 270;            % half max reaction rate of RuBisCO
+        Km = 270;            % half max reaction rate of RuBisCO, uM
         KO = 1000;           % uM
         O = 260;             % uM, calculated from ambient O2
         S_sat = 13;          % Specificity ratio when RuBisCO is saturated
