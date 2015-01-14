@@ -42,7 +42,6 @@ frac_oxygenation_ccm = OratewC./CratewO;
 frac_oxygenation_cy = OratewC_cy./CratewO_cy;
 frac_oxygenation_just_rbc = OratewC_just_rbc./CratewO_just_rbc;
 
-
 % Cost of 2PG recovery on a per-fixation basis in each case.
 cost_2pg_ccm_h = cost_per_2pg * frac_oxygenation_ccm;
 cost_2pg_cy_h = cost_per_2pg * frac_oxygenation_cy;
@@ -52,6 +51,17 @@ cost_2pg_just_rbc_h = cost_per_2pg * frac_oxygenation_just_rbc;
 total_cost_ccm_h = cost_2pg_ccm_h + cost_h + cost_fixation;
 total_cost_cy_h = cost_2pg_cy_h + cost_cy_h + cost_fixation;
 total_cost_just_rbc_h = cost_2pg_just_rbc_h + cost_just_rbc_h + cost_fixation;
+
+% Fraction oxygenation as a function of pH. 
+figure(222)
+semilogy(pH, frac_oxygenation_ccm, 'b');
+hold on;
+semilogy(pH, frac_oxygenation_cy, 'g');
+semilogy(pH, frac_oxygenation_just_rbc, 'r');
+%semilogy(pH, frac_oxygenation_scaffold, 'k');
+title('Ratio of Oxygenations/Carboxylations');
+legend('CCM', 'cytosolic enzymes', 'RuBisCO alone', 'scaffolded enzymes');
+
 % =========================================================================
 % Plot cummulative plot
 % =========================================================================
