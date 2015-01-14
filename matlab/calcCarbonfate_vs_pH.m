@@ -6,14 +6,26 @@
 % 2: cell has active transport and CA, no carboxysome.
 % 3: cell has just RuBisCO.
 ccm_params = CCMParams_Csome;
+ccm_params_scaffold = CCMParams_Csome;
 ccm_params_cell = CCMParams_NoCsome;
 ccm_params_just_rbc = CCMParams_NoCsome;
+
+% As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
+% which has a much higher specificity to CO2 and much lower KM than the
+% cyanobacterial RuBisCO. Data from Savir et al., 2010.
+ccm_params_just_rbc.kRub = 1.2;
+ccm_params_just_rbc.Km = 3.3; 
+ccm_params_just_rbc.S_sat = 166;
+ccm_params_just_rbc.KO = 374;
 
 % We are sweeping over cytoplasmic pH and calculating implied
 % permeabilities of the cell membrane to bicarbonate.
 % Note: we are ignoring the second pKa of carbonic acid which is at 
-% about pH 10.3, so we shouldn't consider pHs too near that. 
-pH = linspace(2, 9.5, 30);
+% about pH 10.3, so we shouldn't consider pHs too near that. Also,
+% I know of no cells with an intracellular pH below 6. The only reason 
+% we start the pH sweep below 6 is that the original model was using an
+% implied pH of ~= 4 (calculated from the bicarbonate permeability used).
+pH = linspace(3.5, 9.5, 30);
 kmH = zeros(30);
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
@@ -40,6 +52,26 @@ for i =  1:length(pH)
     Ccsome(i) = res.c_csome_uM;
     Hcsome(i) = res.h_csome_uM;
     OratewC(i) = res.OratewC_pm;
+end
+
+% Calculate carbon fate for cells w/ carboxysomes but no shell
+% TODO: warning that CA not saturated in this case?? does this make sense?
+for i =  1:length(pH)  
+    ccm_params_scaffold.pH = pH(i);
+    ccm_params_scaffold.k = 1.0;
+    
+    % Calculate the optimal jc.
+    jc_opt_scaffold(i) = ccm_params_scaffold.CalcOptimalJc(Hmax);
+    ccm_params_scaffold.jc = jc_opt(i);
+    
+    % Run the model
+    executor = FullCCMModelExecutor(ccm_params_scaffold);
+    res = executor.RunAnalytical();
+    Hin_scaffold(i) = res.Hin_pm;
+    CratewO_scaffold(i) = res.CratewO_pm;
+    Ccyto_scaffold(i) = res.c_cyto_uM;
+    Ccsome_scaffold(i) = res.c_csome_uM;
+    Hcsome_scaffold(i) = res.h_csome_uM;
 end
 
 % Calculate carbon fate for cells w/o carboxysomes

@@ -1,9 +1,10 @@
 %Run calcCarbonfate_vs_pH.m first
 
 % Cost of transport in the 3 cases (per fixation)
-cost_h = Hin./CratewO;
-cost_cy_h = Hin_cy./CratewO_cy;
-cost_just_rbc_h = Hin_just_rbc./CratewO_just_rbc;
+cost_h = Hin ./ CratewO;
+cost_cy_h = Hin_cy ./ CratewO_cy;
+cost_just_rbc_h = Hin_just_rbc ./ CratewO_just_rbc;
+cost_scaffold_h = Hin_scaffold ./ CratewO_scaffold;
 
 % Cost of fixation (per fixation)
 % 3 ATP, 2 NADPH per CO2 fixed in Calvin Cycle.
@@ -32,6 +33,7 @@ cost_per_2pg = (10 + 4 + 0.5*cost_fixation + 0.5*cost_per_amination);
 % Specificity ratio as defined by Savir et al. 2010.
 % S = (RC/RO)([O2]/[CO2]) => RO/RC = [O2]/(S [CO2])
 % TODO: check that RuBisCO is saturated in all cases here.
+<<<<<<< HEAD
 % frac_oxygenation_ccm = ccm_params.O ./ (Ccsome .* ccm_params.S_sat);
 % frac_oxygenation_cy = ccm_params_cell.O ./ (Ccyto_cy .* ccm_params_cell.S_sat);
 % frac_oxygenation_just_rbc = ccm_params_just_rbc.O ./ (Ccyto_just_rbc .* ccm_params_just_rbc.S_sat);
@@ -42,16 +44,24 @@ frac_oxygenation_ccm = OratewC./CratewO;
 frac_oxygenation_cy = OratewC_cy./CratewO_cy;
 frac_oxygenation_just_rbc = OratewC_just_rbc./CratewO_just_rbc;
 
+=======
+oxygenation_rate_ratio_ccm = ccm_params.O ./ (Ccsome .* ccm_params.S_sat);
+oxygenation_rate_ratio_cy = ccm_params_cell.O ./ (Ccyto_cy .* ccm_params_cell.S_sat);
+oxygenation_rate_ratio_just_rbc = ccm_params_just_rbc.O ./ (Ccyto_just_rbc .* ccm_params_just_rbc.S_sat);
+oxygenation_rate_ratio_scaffold = ccm_params_scaffold.O ./ (Ccyto_scaffold .* ccm_params_scaffold.S_sat);
+>>>>>>> FETCH_HEAD
 
 % Cost of 2PG recovery on a per-fixation basis in each case.
-cost_2pg_ccm_h = cost_per_2pg * frac_oxygenation_ccm;
-cost_2pg_cy_h = cost_per_2pg * frac_oxygenation_cy;
-cost_2pg_just_rbc_h = cost_per_2pg * frac_oxygenation_just_rbc;
+cost_2pg_ccm_h = cost_per_2pg * oxygenation_rate_ratio_ccm;
+cost_2pg_cy_h = cost_per_2pg * oxygenation_rate_ratio_cy;
+cost_2pg_just_rbc_h = cost_per_2pg * oxygenation_rate_ratio_just_rbc;
+cost_2pg_scaffold = cost_per_2pg * oxygenation_rate_ratio_scaffold;
 
 % Total cost of the system in H+/fixation for each case.
 total_cost_ccm_h = cost_2pg_ccm_h + cost_h + cost_fixation;
 total_cost_cy_h = cost_2pg_cy_h + cost_cy_h + cost_fixation;
 total_cost_just_rbc_h = cost_2pg_just_rbc_h + cost_just_rbc_h + cost_fixation;
+<<<<<<< HEAD
 % =========================================================================
 % Plot cummulative plot
 % =========================================================================
@@ -103,10 +113,119 @@ end
 % =========================================================================
 % Plot cost of transport, CCB cycle and photorespiration per carbon fixation
 % =========================================================================
+=======
+total_cost_scaffold_h = cost_2pg_scaffold + cost_scaffold_h + cost_fixation;
+
+% Fraction oxygenation as a function of pH. 
+figure(222)
+semilogy(pH, oxygenation_rate_ratio_ccm, 'b');
+hold on;
+semilogy(pH, oxygenation_rate_ratio_cy, 'g');
+semilogy(pH, oxygenation_rate_ratio_just_rbc, 'r');
+semilogy(pH, oxygenation_rate_ratio_scaffold, 'k');
+title('Ratio of Oxygenations/Carboxylations');
+legend('CCM', 'cytosolic enzymes', 'RuBisCO alone', 'scaffolded enzymes');
+
+% Cost breakdown of the ccm model as a function of pH.
+figure(5)
+subplot(2,2,1);
+area(pH, total_cost_ccm_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_ccm_h, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+area(pH, cost_2pg_ccm_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+plot(pH, total_cost_ccm_h, '-k', 'LineWidth', 3);
+plot(pH, 3e3 .* all_ones, '--g', 'LineWidth', 2);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+ylabel('Energetic Cost H^+ / (CO_2 fixed)');
+xlabel('Cytoplasmic pH');
+title('Full CCM');
+
+% Cost breakdown of the scaffolded enzymes model as a function of pH.
+subplot(2,2,2);
+area(pH, total_cost_scaffold_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_scaffold, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+plot(pH, total_cost_scaffold_h, '-k', 'LineWidth', 3);
+plot(pH, 3e3 .* all_ones, '--g', 'LineWidth', 2);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+xlabel('Cytoplasmic pH');
+title('Scaffolded Enzymes');
+legend('Transport', 'Photorespiration', 'Fixation', 'Total Cost', 'Original Model');
+
+% Cost breakdown of the cytosolic enzymes model as a function of pH.
+subplot(2,2,3);
+area(pH, total_cost_cy_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
+plot(pH, 3e3 .* all_ones, '--g', 'LineWidth', 2);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+set(gca, 'YTick', []);
+xlabel('Cytoplasmic pH');
+title('Reactions in Cytosol');
+
+% Cost breakdown of the cytosolic enzymes model as a function of pH.
+subplot(2,2,4);
+area(pH, total_cost_just_rbc_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
+hold on;
+area(pH, cost_fixation + cost_2pg_just_rbc_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+plot(pH, total_cost_just_rbc_h, '-k', 'LineWidth', 3);
+plot(pH, 3e3 .* all_ones, '--g', 'LineWidth', 2);
+set(gca, 'Yscale', 'log');
+axis([pH(1) pH(end) 1e-1 2e8]);
+set(gca, 'YTick', []);
+xlabel('Cytoplasmic pH');
+title('RuBisCO Alone');
+
+>>>>>>> FETCH_HEAD
 figure(2)
 % plot cost of transport/CO2 fixation with Cell membrane permeability
 loglog(kmH, cost_h, 'Color', 'k', 'LineWidth', 3);
 hold on
+<<<<<<< HEAD
+=======
+text(10*kmH(end), 1.7*cost_h(end), 'CCM cost', 'Color', 'r');
+
+loglog(kmH, cost_cy_h, 'Color', 'k', 'LineWidth', 3);
+plot([1e-7 1e-7], [1e-1 2e7], 'Color', 'm', 'LineWidth', 20)
+text(1.7e-7, 5e4, 'HCO_3^- permeability', 'Color', 'm')
+
+plot([3e-3 3e-3], [1e-1 2e7], 'Color', 'c', 'LineWidth', 20)
+text(7e-5, 5e4, 'H_2CO_3 permeability', 'Color', 'c')
+
+
+plot([kmH(1) kmH(end)], [cost_fixation cost_fixation], '--b');
+%text(kmH(1)/1100.0, 50, 'Calvin Cycle Fixation', 'Color', 'b');
+
+plot([3e-4 3e-4], [1e-1 3e3], '--k');
+plot([kmH(1) kmH(end)], [3e3 3e3], '--k');
+%text(kmH(1)/1100.0, 5e3, 'Original Model', 'Color', 'k');
+
+% cost is 1 nadph, 1 atp and 1 co2 times specificity ratio
+% when RuBisCO is saturated: S = vc/vo ~ 13;
+% not saturated: S = (vc/Kc)/(vo/Ko)~ 50 %SavirMilo paper
+% Is rubisco saturated?
+oxygenation_rate_ratio_cell = ccm_params.O ./ (Ccyto_cy .* ccm_params.S_sat);
+cost_2pg_cell_h = oxygenation_rate_ratio_cell .* (10 + 4 + 1.5*4 + 10);
+total_cost_cell_h = cost_2pg_cell_h + cost_cy_h + cost_fixation;
+
+plot(kmH, total_cost_cell_h, '--g');
+text(kmH(1)/1100.0, 1.5*total_cost_cell_h(end), 'No CCM', 'Color', 'g');
+
+oxygenation_rate_ratio_noca = ccm_params.O ./ (Ccyto_just_rbc .* ccm_params.S_sat);
+cost_2pg_noca_h = oxygenation_rate_ratio_noca .* (10 + 4 + 1.5*4 + 10);
+total_cost_noca_h = cost_2pg_noca_h + cost_just_rbc_h + cost_fixation;
+
+plot(kmH, total_cost_noca_h, '--m');
+%text(kmH(1)/1100.0, 1.5*total_cost_noca_h(end), 'Just RuBisCO', 'Color', 'g');
+
+>>>>>>> FETCH_HEAD
 haxes1 = gca; % handle to axes
 set(haxes1,'XColor','k','YColor','k')
 axis([kmH(end) kmH(1) 1e-1 2e7])

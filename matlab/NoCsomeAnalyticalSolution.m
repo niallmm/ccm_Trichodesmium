@@ -29,9 +29,8 @@ classdef NoCsomeAnalyticalSolution
     end
     
     methods
-        function obj = NoCsomeAnalyticalSolution(ccm_params, h_cyto_uM, c_cyto_uM)
+        function obj = NoCsomeAnalyticalSolution(ccm_params)
             obj.ccm_params = ccm_params;
-
             
             % Uses analytic solution in cytosol to break down the fate of carbon in the
             % case that all the CO2 fixation maxhinery is in the cytosol.
