@@ -39,6 +39,7 @@ for i =  1:length(pH)
     Ccyto(i) = res.c_cyto_uM;
     Ccsome(i) = res.c_csome_uM;
     Hcsome(i) = res.h_csome_uM;
+    OratewC(i) = res.OratewC_pm;
 end
 
 % Calculate carbon fate for cells w/o carboxysomes
@@ -58,6 +59,7 @@ for i =  1:length(pH)
     Hin_cy(i) = res.Hin_pm;
     CratewO_cy(i) = res.CratewO_pm;
     Ccyto_cy(i) = res.c_cyto_uM;
+    OratewC_cy(i) = res.OratewC_pm;
 end
 
 % Calculate carbon fate for cells w/o just RuBisCO
@@ -77,5 +79,6 @@ for i =  1:length(pH)
     Hin_just_rbc(i) = res.Hin_pm;
     CratewO_just_rbc(i) = res.CratewO_pm;
     Ccyto_just_rbc(i) = res.c_cyto_uM;
+    OratewC_just_rbc(i) = res.OratewC_pm;
 end
 
