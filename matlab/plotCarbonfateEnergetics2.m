@@ -66,7 +66,7 @@ legend('CCM', 'cytosolic enzymes', 'RuBisCO alone', 'scaffolded enzymes');
 % Plot cummulative plot
 % =========================================================================
 %%
-plot1 = 0;
+plot1 = 1;
 if plot1 == 1
     % Cost breakdown of the ccm model as a function of pH.
     figure(5)

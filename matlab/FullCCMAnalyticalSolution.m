@@ -21,6 +21,7 @@ classdef FullCCMAnalyticalSolution
         OratewC_um;        % [um/s] rate of O2 fication with CO2 accounted for
         CratewO_pm;        % [pmole/s] rate of CO2 fixation with oxygen accounted for
         OratewC_pm;        % [pmole/s] rate of O2 fication with CO2 accounted for
+        OHrate_um;         % [um/s] rate of OH- evolution due to carbonic anyhdrase
         % =================================================================
         % Calculate CO2 and HCO3- flux rates at cell membrane
         % integrated over surface area of cell
@@ -108,6 +109,8 @@ classdef FullCCMAnalyticalSolution
             obj.CratewO_um = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e-3; % convert from uM*cm^3 to umoles
             obj.OratewC_pm = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e3;
             obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e-3;
+            obj.OHrate_um = p.k*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e-3;
+            obj.OHrate_pm = p.k*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e3;
             
             obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3;
             obj.Hleak_pm = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e3;
