@@ -26,6 +26,12 @@ all_ones = ones(size(pH));
 cost_per_amination = 4 + 10;
 cost_per_2pg = (10 + 4 + 0.5*cost_fixation + 0.5*cost_per_amination);
 
+%Cost of maintaining pH balance with a CCM 
+% - only account for pH maintanence needed from CCM activity
+% -- 1 ATP per HCO3- transported (need to export 1 H+?)
+% -- gain 1 OH group (or loose one H+) from each HCO3- converted to CO2
+cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
+
 % Fraction of RuBisCO reactions that are oxygenations. <--- not fraction,
 % but the number of oxygenations normalized by carboxylations ie
 % oxygenations/carboxylations
@@ -128,8 +134,10 @@ text(6, 5e2, 'HCO3^- transport cost', 'Color', 'r')
 plot([pH(1) pH(end)], [cost_fixation cost_fixation], '--b');
 text(3, 20, 'Calvin Cycle Fixation', 'Color', 'b');
 % plot cost of photorespiration
-loglog(pH, cost_2pg_ccm_h, 'Color','k', 'LineWidth', 3);
+semilogy(pH, cost_2pg_ccm_h, 'Color','k', 'LineWidth', 3);
 text(6, 1, 'Cost of photorespiration', 'Color', 'k')
+%plot cost of pH maintenance
+semilogy(pH, cost_pH_maintenance, '--c', 'LineWidth',3)
 title('Full CCM')
 % 
 

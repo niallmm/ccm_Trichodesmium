@@ -52,6 +52,7 @@ for i =  1:length(pH)
     Ccsome(i) = res.c_csome_uM;
     Hcsome(i) = res.h_csome_uM;
     OratewC(i) = res.OratewC_pm;
+    OHrateCA(i) = res.OHrate_pm;
 end
 
 % Calculate carbon fate for cells w/ carboxysomes but no shell
