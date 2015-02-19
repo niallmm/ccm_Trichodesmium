@@ -4,7 +4,7 @@ p = CCMParams_Csome;
 
 kcHvec = [1e-3 1e-4 1e-5];
 kcCvec = logspace(-3, -5, 10);
-
+p.pH = 8;
 p.jc = 0.01;
 for j = 1:length(kcHvec)
     p.kcH = kcHvec(j);
