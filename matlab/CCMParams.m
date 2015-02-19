@@ -5,7 +5,8 @@ classdef CCMParams
     % Mutable properties that may depend on the model context.
     properties
         jc = 0.6;        % active uptake rate of HCO3- (cm/s)
-        k = 1e-3;        % permeability of carboxysome to Ci (cm/s)
+        kcC = 1e-3;        % permeability of carboxysome to CO2 (cm/s)
+        kcH = 1e-3;      % permeability of carboxysome to HCO3- cm/s
 
         Rc = 5e-6;       % radius of c-some (cm)
         Rb = 5e-5;       % radius of cell (cm)
@@ -78,7 +79,8 @@ classdef CCMParams
         beta_h  % dh/d\rho = beta_h*h - epsilon_h - beta_c2*c
         epsilon_c % dc/dp = beta_c*c - eps_c 
         epsilon_h % dh/d\rho = beta_h*h - epsilon_h - beta_c2*c
-        G  % grouped params = D/(Rc^2 kc) + 1/Rc - 1/Rb [1/cm]
+        GC  % grouped params = D/(Rc^2 kcC) + 1/Rc - 1/Rb [1/cm]
+        GH  % grouped params = D/(Rc^2 kcH) + 1/Rc - 1/Rb [1/cm]
         
         % Calculated appropriate to the volume in which the enzymes are
         % contained which depends on the situation (in cbsome or not).

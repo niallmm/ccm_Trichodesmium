@@ -49,11 +49,11 @@ classdef FullCCMAnalyticalSolution
             % Calculate analytic solutions
             p = ccm_params;
             
-            N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.G + p.D/p.Rb^2) ...
-                + p.kmC*p.Cout*((p.kmH+p.alpha)*p.G +p.D/p.Rb^2);
-            M = (p.kmC + p.alpha)*(1+1/p.Keq)*p.kmH*p.G + ...
+            N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
+                + p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2);
+            M = (p.kmC + p.alpha)*(p.GC+p.GH/p.Keq)*p.kmH + ...
                 p.kmC*(1+(p.kmH/p.kmC)/p.Keq)*p.D/p.Rb^2;
-            P = ((p.alpha + p.kmC)*p.G + p.D/p.Rb^2).*(p.kmH*p.G + p.D/p.Rb^2);
+            P = ((p.alpha + p.kmC)*p.GC + p.D/p.Rb^2).*(p.kmH*p.GH + p.D/p.Rb^2);
             
             Ccsomep = 0.5*(N./M - p.Rc^3*p.Vmax*P./(3*M*p.D) - p.Km) ...
                 + 0.5*sqrt((-N./M + p.Rc^3*p.Vmax*P./(3*M*p.D) + p.Km).^2 + 4*N*p.Km./M);
@@ -61,12 +61,12 @@ classdef FullCCMAnalyticalSolution
             
             % saturated CA forward reaction
             
-            CCAsat0 = p.Vba*(p.Rc^3)*(p.G+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
+            CCAsat0 = p.Vba*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
                 p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC);
             
-            HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.G+p.D/(p.kmH*p.Rb^2))/(3*p.D)...
-                +(p.jc+p.kmH)*p.Hout/p.kmH + p.alpha*p.kmC*p.Cout./(p.kmH*((p.alpha + p.kmC)*p.G+p.D/p.Rb^2)) ...
-                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.G./((p.alpha+p.kmC)*p.G+p.D/p.Rb^2))).*CCAsat0/p.kmH;
+            HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.GH+p.D/(p.kmH*p.Rb^2))/(3*p.D)...
+                +(p.jc+p.kmH)*p.Hout/p.kmH + p.alpha*p.kmC*p.Cout./(p.kmH*((p.alpha + p.kmC)*p.GC+p.D/p.Rb^2)) ...
+                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.GC./((p.alpha+p.kmC)*p.GC+p.D/p.Rb^2))).*CCAsat0/p.kmH;
             % determine whether CA is saturated and choose apporpriate
             % analytic solution
             diff = Ccsomep - CCAsat0;
@@ -82,19 +82,19 @@ classdef FullCCMAnalyticalSolution
             end
             
             % concentration in the cytosol at r = Rb
-            obj.c_cyto_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)*p.G/...
-                ((p.alpha+p.kmC)*p.G + p.D/p.Rb^2) +obj.c_csome_uM;
+            obj.c_cyto_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)*p.GC/...
+                ((p.alpha+p.kmC)*p.GC + p.D/p.Rb^2) +obj.c_csome_uM;
             
            obj.h_cyto_uM = ((p.jc+p.kmH)*p.Hout + p.alpha*obj.c_cyto_uM - ...
-               p.kmH*obj.h_csome_uM)*p.G/(p.kmH*p.G + p.D/p.Rb^2)+obj.h_csome_uM;
+               p.kmH*obj.h_csome_uM)*p.GH/(p.kmH*p.GH + p.D/p.Rb^2)+obj.h_csome_uM;
            % concentration across the cell
            obj.r = linspace(p.Rc, p.Rb, 100);
            obj.c_cyto_rad_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)...
-               *(p.D/(p.k*p.Rc^2) + 1/p.Rc - 1./obj.r)/...
-                ((p.alpha+p.kmC)*p.G + p.D/p.Rb^2) +obj.c_csome_uM;
+               *(p.D/(p.kcC*p.Rc^2) + 1/p.Rc - 1./obj.r)/...
+                ((p.alpha+p.kmC)*p.GC + p.D/p.Rb^2) +obj.c_csome_uM;
            obj.h_cyto_rad_uM = ((p.jc+p.kmH)*p.Hout + p.alpha*obj.c_cyto_uM - ...
-               p.kmH*obj.h_csome_uM)*(p.D/(p.k*p.Rc^2) + 1/p.Rc - 1./obj.r)...
-               /(p.kmH*p.G + p.D/p.Rb^2)+obj.h_csome_uM;
+               p.kmH*obj.h_csome_uM)*(p.D/(p.kcH*p.Rc^2) + 1/p.Rc - 1./obj.r)...
+               /(p.kmH*p.GH + p.D/p.Rb^2)+obj.h_csome_uM;
 
             
            % unit conversion to mM
@@ -110,8 +110,8 @@ classdef FullCCMAnalyticalSolution
             obj.CratewO_um = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e-3; % convert from uM*cm^3 to umoles
             obj.OratewC_pm = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e3;
             obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e-3;
-            obj.OHrate_um = -p.k*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e-3;
-            obj.OHrate_pm = -p.k*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e3;
+            obj.OHrate_um = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e-3;
+            obj.OHrate_pm = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e3;
             
             obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3;
             obj.Hleak_pm = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e3;
