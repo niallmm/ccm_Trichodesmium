@@ -7,6 +7,7 @@ classdef CCMParams
         jc = 0.6;        % active uptake rate of HCO3- (cm/s)
         kcC = 1e-3;        % permeability of carboxysome to CO2 (cm/s)
         kcH = 1e-3;      % permeability of carboxysome to HCO3- cm/s
+        k = 1e-3;
 
         Rc = 5e-6;       % radius of c-some (cm)
         Rb = 5e-5;       % radius of cell (cm)
@@ -16,10 +17,12 @@ classdef CCMParams
         Hout = 14.8352;	 % external bicarbonate concentration (microM) see Fluxconversion.m
         Cout = 0.1648;	 % external  carbon dioxide concentration Salon 1996 pg 252 (microM)
         alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
-
+        
+        % values at pH 8 -- will be used to re-scale pH dependence in
+        % function
         kRub = 26;           % rxns/s maximum reaction rate at single active site
         NRub = 2160;         % number of RuBisCO active sites
-        Km = 270;            % half max reaction rate of RuBisCO, uM
+        Km_8 = 270;            % half max reaction rate of RuBisCO, uM
         KO = 1000;           % uM
         O = 260;             % uM, calculated from ambient O2
         S_sat = 13;          % Specificity ratio when RuBisCO is saturated
@@ -52,18 +55,23 @@ classdef CCMParams
         % Dependent paramters for the case that CA & RuBisCO are uniformly 
         % co-localized to the carboxysome.
         VmaxCsome    % uM/s RuBisCO max reaction rate/concentration
+        VmaxCsome_pH8 % uM/s RuBisCO max reaction rate/concentration at pH 8
+        % needed to calculate the oxygen reaction rate
         VbaCsome     % maximum rate of bicarbonate dehydration by CA
         VcaCsome     % maximum rate of carbon dioxide hydration by CA
         
         % Dependent paramters for the case that CA & RuBisCO are uniformly 
         % distributed through the cytoplasm.
-        VmaxCell    % uM/s RuBisCO max reaction rate/concentration 
+        VmaxCell    % uM/s RuBisCO max reaction rate/concentration
+        VmaxCell_pH8 %uM/s RuBisCO max reaction rate/concentration at pH 8
         VbaCell     % maximum rate of bicarbonate dehydration by CA 
         VcaCell     % maximum rate of carbon dioxide hydration by CA 
         
         %pH dependent things
         kmH         % cm/s permiability of outer membrane to HCO3- ph dependent
         Keq         % pH dependent equilibrium constant of carbonic anhydrase
+        kRub_pH     % pH dependent RuBisCO reaction rate/s at single reaction site
+        Km    % pH dependent RuBisCO 1/2 max concentration
     end
     
     properties (Abstract)
@@ -100,9 +108,30 @@ classdef CCMParams
         function value = get.SAcell(obj)
             value = 4*pi*obj.Rb^2;
         end
+        function value = get.kRub_pH(obj)
+            rxn = load('pH_Vmax.mat');
+            VmaxpH8 = interp1(rxn.pH, rxn.Vmax, 8); % find value of Vmax at pH 8 from data
+            if (obj.pH > 8.36) || (obj.pH < 6)
+                warning('pH is out of range of experimental RuBisCO measurements')
+            end
+            temp = interp1(rxn.pH, rxn.Vmax, obj.pH); % find value of Vmax at pH we want from data
+            value = temp*obj.kRub/VmaxpH8; % scale the interpolated value by our known kRub rate at pH 8
+            % need to scale because the data was not in the right units.
+            % now it is scaled to rxns/s per active site
+        end
+        function value = get.Km(obj)
+            rxn = load('pH_Km.mat');
+            if (obj.pH > 8.36) || (obj.pH < 6)
+                warning('pH is out of range of experimental RuBisCO measurements')
+            end
+            value = interp1(rxn.pH, rxn.Km, obj.pH)*1e3; % Km was in mM
+        end
         
         function value = get.VmaxCsome(obj)
-            value = obj.kRub * obj.NRub*1e6/(obj.Vcsome * obj.Na * 1e-3);
+            value = obj.kRub_pH * obj.NRub*1e6/(obj.Vcsome * obj.Na * 1e-3);
+        end
+        function value = get.VmaxCsome_pH8(obj)
+            value = obj.kRub*obj.NRub*1e6/(obj.Vcsome * obj.Na * 1e-3);
         end
         function value = get.VbaCsome(obj)
             value = obj.kCAH * obj.NCA * 1e6/(obj.Vcsome * obj.Na * 1e-3);
@@ -112,6 +141,9 @@ classdef CCMParams
         end
         
         function value = get.VmaxCell(obj)
+            value = obj.kRub_pH * obj.NRub*1e6/(obj.Vcell * obj.Na * 1e-3);
+        end
+        function value = get.VmaxCell_pH8(obj)
             value = obj.kRub * obj.NRub*1e6/(obj.Vcell * obj.Na * 1e-3);
         end
         function value = get.VbaCell(obj)

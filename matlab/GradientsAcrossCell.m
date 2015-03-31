@@ -18,7 +18,7 @@ Hcyto = ((p.jc+p.kmH)*p.Hout + p.alpha*res.c_cyto_uM - p.kmH*res.h_csome_uM)*...
     
 
 figure
-plot(rb, Ccyto*1e-3, 'r')
+semilogy(rb, Ccyto*1e-3, 'r')
 hold on
 plot(rb, Hcyto*1e-3, 'b')
 line([0 p.Rc],[Ccsome Ccsome], 'Color','r') 

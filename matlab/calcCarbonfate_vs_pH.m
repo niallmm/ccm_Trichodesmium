@@ -14,7 +14,7 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 % which has a much higher specificity to CO2 and much lower KM than the
 % cyanobacterial RuBisCO. Data from Savir et al., 2010.
 ccm_params_just_rbc.kRub = 1.2;
-ccm_params_just_rbc.Km = 3.3; 
+% ccm_params_just_rbc.Km = 3.3; 
 ccm_params_just_rbc.S_sat = 166;
 ccm_params_just_rbc.KO = 374;
 
@@ -25,7 +25,7 @@ ccm_params_just_rbc.KO = 374;
 % I know of no cells with an intracellular pH below 6. The only reason 
 % we start the pH sweep below 6 is that the original model was using an
 % implied pH of ~= 4 (calculated from the bicarbonate permeability used).
-pH = linspace(3.5, 9.5, 30);
+pH = linspace(6, 8.3, 30);
 kmH = zeros(30);
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
@@ -35,7 +35,8 @@ alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 % Calculate carbon fate for cells w/ carboxysomes
 for i =  1:length(pH)  
     ccm_params.pH = pH(i);
-    ccm_params.k = kc_opt;
+    ccm_params.kcC = kc_opt;
+    ccm_params.kcH = kc_opt;
     % CCMParams calculates the implied kmH for us.
     kmH(i) = ccm_params.kmH; 
     

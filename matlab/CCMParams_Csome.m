@@ -18,6 +18,7 @@ classdef CCMParams_Csome < CCMParams
         epsilon_h % dh/d\rho = beta_h*h - epsilon_h - beta_c2*c
         GC  % grouped params = D/(Rc^2 kc) + 1/Rc - 1/Rb [1/cm]
         GH
+        G
         
         Vmax    % uM/s RuBisCO max reaction rate/concentration (inside csome)
         Vba     % maximum rate of bicarbonate dehydration by CA (inside csome)
@@ -59,6 +60,9 @@ classdef CCMParams_Csome < CCMParams
         end
         function value = get.GH(obj)
             value = (obj.D/(obj.kcH*obj.Rc^2) + 1/obj.Rc - 1/obj.Rb);
+        end
+        function value = get.G(obj)
+            value = (obj.D/(obj.k*obj.Rc^2) + 1/obj.Rc - 1/obj.Rb);
         end
         function value = get.beta_c(obj)
             value = -(obj.alpha+ obj.kmC)/(obj.Rc*((obj.kmC+obj.alpha)*obj.GC + obj.D/obj.Rb^2));

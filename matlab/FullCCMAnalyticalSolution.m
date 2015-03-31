@@ -89,6 +89,7 @@ classdef FullCCMAnalyticalSolution
                p.kmH*obj.h_csome_uM)*p.GH/(p.kmH*p.GH + p.D/p.Rb^2)+obj.h_csome_uM;
            % concentration across the cell
            obj.r = linspace(p.Rc, p.Rb, 100);
+           
            obj.c_cyto_rad_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)...
                *(p.D/(p.kcC*p.Rc^2) + 1/p.Rc - 1./obj.r)/...
                 ((p.alpha+p.kmC)*p.GC + p.D/p.Rb^2) +obj.c_csome_uM;
@@ -105,7 +106,7 @@ classdef FullCCMAnalyticalSolution
             
 
             C = obj.c_csome_uM;
-            obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
+            obj.VO = p.VmaxCsome_pH8*p.KO/(p.Km_8*p.S_sat);
             obj.CratewO_pm = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e3;
             obj.CratewO_um = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e-3; % convert from uM*cm^3 to umoles
             obj.OratewC_pm = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e3;
