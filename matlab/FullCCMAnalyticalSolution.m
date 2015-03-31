@@ -40,6 +40,14 @@ classdef FullCCMAnalyticalSolution
         c_cyto_rad_uM;
         
         error;             % the proportion of oxygen fixations to total fixation events
+        %==================================================================
+        % intermediate values useful for calculating 
+        N;
+        M;
+        P;
+        CCAsat0;
+        hdiff;
+        
     end
     
     methods
@@ -49,33 +57,33 @@ classdef FullCCMAnalyticalSolution
             % Calculate analytic solutions
             p = ccm_params;
             
-            N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.G + p.D/p.Rb^2) ...
+            obj.N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.G + p.D/p.Rb^2) ...
                 + p.kmC*p.Cout*((p.kmH+p.alpha)*p.G +p.D/p.Rb^2);
-            M = (p.kmC + p.alpha)*(1+1/p.Keq)*p.kmH*p.G + ...
+            obj.M = (p.kmC + p.alpha)*(1+1/p.Keq)*p.kmH*p.G + ...
                 p.kmC*(1+(p.kmH/p.kmC)/p.Keq)*p.D/p.Rb^2;
-            P = ((p.alpha + p.kmC)*p.G + p.D/p.Rb^2).*(p.kmH*p.G + p.D/p.Rb^2);
+            obj.P = ((p.alpha + p.kmC)*p.G + p.D/p.Rb^2).*(p.kmH*p.G + p.D/p.Rb^2);
             
-            Ccsomep = 0.5*(N./M - p.Rc^3*p.Vmax*P./(3*M*p.D) - p.Km) ...
-                + 0.5*sqrt((-N./M + p.Rc^3*p.Vmax*P./(3*M*p.D) + p.Km).^2 + 4*N*p.Km./M);
+            Ccsomep = 0.5*(obj.N./obj.M - p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) - p.Km) ...
+                + 0.5*sqrt((-obj.N./obj.M + p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) + p.Km).^2 + 4*obj.N*p.Km./obj.M);
             Hcsome = Ccsomep/p.Keq;
             
             % saturated CA forward reaction
             
-            CCAsat0 = p.Vba*(p.Rc^3)*(p.G+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
+            obj.CCAsat0 = p.Vba*(p.Rc^3)*(p.G+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
                 p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC);
             
             HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.G+p.D/(p.kmH*p.Rb^2))/(3*p.D)...
                 +(p.jc+p.kmH)*p.Hout/p.kmH + p.alpha*p.kmC*p.Cout./(p.kmH*((p.alpha + p.kmC)*p.G+p.D/p.Rb^2)) ...
-                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.G./((p.alpha+p.kmC)*p.G+p.D/p.Rb^2))).*CCAsat0/p.kmH;
+                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.G./((p.alpha+p.kmC)*p.G+p.D/p.Rb^2))).*obj.CCAsat0/p.kmH;
             % determine whether CA is saturated and choose apporpriate
             % analytic solution
-            diff = Ccsomep - CCAsat0;
-            if  Ccsomep > CCAsat0 || (abs(diff)/(Ccsomep+CCAsat0) <1e-3)
-                obj.c_csome_uM = CCAsat0;
+            diff = Ccsomep - obj.CCAsat0;
+            if  Ccsomep > obj.CCAsat0 || (abs(diff)/(Ccsomep+obj.CCAsat0) <1e-3)
+                obj.c_csome_uM = obj.CCAsat0;
                 obj.h_csome_uM = HCAsat0;
                 warning('Carbonic anhydrase is unsaturated, so if you are trying to use the pH dependence this is bad')
 %                 csat = 1
-            elseif Ccsomep<CCAsat0
+            elseif Ccsomep<obj.CCAsat0
                 obj.c_csome_uM = Ccsomep;
                 obj.h_csome_uM = Hcsome;
 %                 CAunsat =1
@@ -102,6 +110,10 @@ classdef FullCCMAnalyticalSolution
             obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
             obj.h_csome_mM = obj.h_csome_uM * 1e-3;
             obj.c_csome_mM = obj.c_csome_uM * 1e-3;
+            
+            % calculate the difference between the cytosolic H
+            % concentration and the expected concentration
+            obj.hdiff = obj.h_cyto_uM - p.h_cyto_exp;
             
 
             C = obj.c_csome_uM;
