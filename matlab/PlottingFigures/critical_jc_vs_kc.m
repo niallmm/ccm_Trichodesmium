@@ -1,7 +1,7 @@
 
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
-p.Hout = 150;
+p.Hout = 15;
 p.pH = 8;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
@@ -47,11 +47,20 @@ critjcRub999(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km)
             p.kmC*p.Cout*((p.kmH+p.alpha)*p.G +p.D/p.Rb^2))./...
            (p.Hout*((p.kmC+p.alpha)*p.G + p.D/p.Rb^2)) - p.kmH;
 end
-figure(5)        
+figure(6)        
 loglog(critjc*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-k')
 hold on
-plot(critjcRub*p.Hout*4*pi*Rb^2*1e6, kvec, '-r')
-plot(critjcRub99*p.Hout*4*pi*Rb^2*1e6, kvec, '-c')
+plot(critjcRub*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-r')
+plot(critjcRub99*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-c')
 % plot(critjcRub999, k, '-g')
 xlabel('Active HCO_3^- transport, j_c*H_{out}, (picomole/s)')
+ylabel('Carboxysome permeability')
+
+figure(116)
+loglog(critjc, kvec, '-k')
+hold on
+plot(critjcRub, kvec, '-r')
+plot(critjcRub99, kvec, '-c')
+% plot(critjcRub999, k, '-g')
+xlabel('Active HCO_3^- transport, j_c, cm/s)')
 ylabel('Carboxysome permeability')

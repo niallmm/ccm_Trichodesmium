@@ -1,6 +1,7 @@
 ksweep = logspace(-9, 2, 1e3);
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
+p.Hout = 15;
 p.pH = 8;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
@@ -18,4 +19,4 @@ end
 
 figure(5)
 hold on
-loglog(jc*p.Hout*4*pi*Rb^2*1e6, ksweep, '--k')
+loglog(jc*p.Hout*4*pi*p.Rb^2*1e6, ksweep, '--k')
