@@ -18,4 +18,4 @@ end
 
 figure(5)
 hold on
-loglog(jc, ksweep, '--k')
+loglog(jc*p.Hout*4*pi*Rb^2*1e6, ksweep, '--k')
