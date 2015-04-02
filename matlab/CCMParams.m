@@ -35,6 +35,7 @@ classdef CCMParams
         
         pH = 8;
         kmH_base = 3e-3; % cm/s this is the permeability of the membrane to pure H2CO3
+        h_cyto_exp = 3000;   %uM of inorganic carbon expected in the cytosol
     end
     
     % Values that cannot be edited by client code since they are physical
