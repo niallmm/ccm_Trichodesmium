@@ -13,10 +13,21 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
 % which has a much higher specificity to CO2 and much lower KM than the
 % cyanobacterial RuBisCO. Data from Savir et al., 2010.
-ccm_params_just_rbc.kRub = 1.2;
-% ccm_params_just_rbc.Km = 3.3; 
-ccm_params_just_rbc.S_sat = 166;
-ccm_params_just_rbc.KO = 374;
+% ccm_params_just_rbc.kRub = 1.2;
+%  ccm_params_just_rbc.Km = 3.3; 
+% ccm_params_just_rbc.S_sat = 166;
+% ccm_params_just_rbc.KO = 374;
+% kRub, Km_8, KO, Ssat are all for Synechococcus 6301 from Savir
+ccm_params_just_rbc.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+ccm_params_just_rbc.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+ccm_params_just_rbc.S_sat = 43;  % specificity ratio
+ccm_params_just_rbc.KO = 972;    % uM
+
+ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+ccm_params.S_sat = 43;  % specificity ratio
+ccm_params.KO = 972;    % uM
+
 
 % We are sweeping over cytoplasmic pH and calculating implied
 % permeabilities of the cell membrane to bicarbonate.
