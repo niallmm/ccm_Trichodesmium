@@ -3,13 +3,18 @@
 % =========================================================================
 
     figure
-    plot(pH, abs(Hin), 'r')
+    semilogy(pH, abs(Hin), 'r')
     hold on
-    plot(pH, abs(CratewO), 'b')
-    plot(pH, abs(OratewC), 'c')
     plot(pH, abs(Hleak), 'k')
     plot(pH, abs(Cleak), 'g')
-    xlabel('pH')
+    xlabel('Cytoplasmic pH')
     ylabel('inorganic carbon fluxes (picomoles/s)')
-    legend('HCO_3^- transport', 'carboxylation', 'oxygenation','HCO_3^- leakage', 'CO_2 leakage')
-
+    legend('HCO_3^- transport', 'HCO_3^- leakage', 'CO_2 leakage')
+    
+    figure
+    semilogy(pH, abs(CratewO), 'b')
+    hold on
+    plot(pH, abs(OratewC), 'c')
+    xlabel('Cytoplasmic pH')
+    ylabel('RuBisCO reactions (picomoles/s)')
+    legend('carboxylation', 'oxygenation')
