@@ -14,10 +14,10 @@ classdef CCMParams
         D = 1e-5;        % diffusion constant (cm^2/s)
 
         kmC = 0.3;       % cm/s permiability of outer membrane to CO2
-        Hout = 14.8352;	 % external bicarbonate concentration (microM) see Fluxconversion.m
-        Cout = 0.1648;	 % external  carbon dioxide concentration Salon 1996 pg 252 (microM)
-        alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
-        
+%         Hout = 14.8352;	 % external bicarbonate concentration (microM) see Fluxconversion.m
+%         Cout = 0.1648;	 % external  carbon dioxide concentration Salon 1996 pg 252 (microM)
+         alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
+        Ci_tot = 15;        %microM
         % values at pH 8 -- will be used to re-scale pH dependence in
         % function
         kRub = 26;           % rxns/s maximum reaction rate at single active site
@@ -36,16 +36,23 @@ classdef CCMParams
         pH = 8;
         kmH_base = 3e-3; % cm/s this is the permeability of the membrane to pure H2CO3
         h_cyto_exp = 3000;   %uM of inorganic carbon expected in the cytosol
+        
+        pH_out = 7;
     end
     
     % Values that cannot be edited by client code since they are physical
     % constants.
     properties (Constant)
         Na = 6.022e23;       % Avogadro's number is constant, of course.
-        RT = 2.48;           % (R = 8.31e-3 kJ/(K*mol))*(298.15 K)
+        RT = 2.4788;           % (R = 8.314e-3 kJ/(K*mol))*(298.15 K)
+        delG0water = -237.19;  % kJ/mol deltaG0 of water (see bicarbonator)
+        delG0CO2 = -386.02;    % kJ/mol for CO2
+        delG0HCO3 = -586.8;   % kJ/mol for HCO3-
+        delG0H2CO3 = -606.3;  % kJ/mol for H2CO3
         delGHC = 586.77 -623.2;     % deltaG0' for HCO3- to CO2
         delGHH = 586.8 - 623.2;     % deltaG0' for HCO3- to H2CO3
         pKa = (-586.77 + 606.33)/2.48/log(10);  % from deltaGHH
+
     end
     
     properties (Dependent)
@@ -73,6 +80,9 @@ classdef CCMParams
         Keq         % pH dependent equilibrium constant of carbonic anhydrase
         kRub_pH     % pH dependent RuBisCO reaction rate/s at single reaction site
         Km    % pH dependent RuBisCO 1/2 max concentration
+        
+        Hout
+        Cout
     end
     
     properties (Abstract)
@@ -162,6 +172,23 @@ classdef CCMParams
             value = exp(-obj.delGHC/obj.RT - log(10)*obj.pH);
             % second term is deltaH*log(10)*pH, where deltaH = 1 from
             % HCO3- -> H20+CO2
+        end
+        function value = get.Hout(obj)
+            delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
+            delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
+            delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
+            prop_H = exp(-delGp0HCO3/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
+                exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
+            value =obj.Ci_tot*prop_H;
+        end
+        function value = get.Cout(obj)
+
+            delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
+            delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
+            delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
+            prop_C = exp(-delGp0CO2/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
+                exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
+            value =obj.Ci_tot*prop_C;
         end
     end
     
