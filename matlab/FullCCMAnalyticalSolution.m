@@ -58,11 +58,11 @@ classdef FullCCMAnalyticalSolution
             p = ccm_params;
             
 
-            obj.N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.G + p.D/p.Rb^2) ...
-                + p.kmC*p.Cout*((p.kmH+p.alpha)*p.G +p.D/p.Rb^2);
-            obj.M = (p.kmC + p.alpha)*(1+1/p.Keq)*p.kmH*p.G + ...
+            obj.N = (p.jc + p.kmH)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
+                + p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2);
+            obj.M = (p.kmC + p.alpha)*(1+1/p.Keq)*p.kmH*p.GH + ...
                 p.kmC*(1+(p.kmH/p.kmC)/p.Keq)*p.D/p.Rb^2;
-            obj.P = ((p.alpha + p.kmC)*p.G + p.D/p.Rb^2).*(p.kmH*p.G + p.D/p.Rb^2);
+            obj.P = ((p.alpha + p.kmC)*p.GC + p.D/p.Rb^2).*(p.kmH*p.GH + p.D/p.Rb^2);
 
             
             Ccsomep = 0.5*(obj.N./obj.M - p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) - p.Km) ...
@@ -72,12 +72,12 @@ classdef FullCCMAnalyticalSolution
             % saturated CA forward reaction
             
 
-            obj.CCAsat0 = p.Vba*(p.Rc^3)*(p.G+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
+            obj.CCAsat0 = p.Vba*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
                 p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC);
             
-            HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.G+p.D/(p.kmH*p.Rb^2))/(3*p.D)...
-                +(p.jc+p.kmH)*p.Hout/p.kmH + p.alpha*p.kmC*p.Cout./(p.kmH*((p.alpha + p.kmC)*p.G+p.D/p.Rb^2)) ...
-                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.G./((p.alpha+p.kmC)*p.G+p.D/p.Rb^2))).*obj.CCAsat0/p.kmH;
+            HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.GH+p.D/(p.kmH*p.Rb^2))/(3*p.D)...
+                +(p.jc+p.kmH)*p.Hout/p.kmH + p.alpha*p.kmC*p.Cout./(p.kmH*((p.alpha + p.kmC)*p.GC+p.D/p.Rb^2)) ...
+                +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.GC./((p.alpha+p.kmC)*p.GC+p.D/p.Rb^2))).*obj.CCAsat0/p.kmH;
 
             % determine whether CA is saturated and choose apporpriate
             % analytic solution
@@ -122,7 +122,7 @@ classdef FullCCMAnalyticalSolution
             
 
             C = obj.c_csome_uM;
-            obj.VO = p.VmaxCsome_pH8*p.KO/(p.Km_8*p.S_sat);
+            obj.VO = p.VmaxCsome*p.KO/(p.Km*p.S_sat);
             obj.CratewO_pm = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e3;
             obj.CratewO_um = p.Vmax*C./(C+p.Km*(1+p.O/p.KO))*p.Vcsome*1e-3; % convert from uM*cm^3 to umoles
             obj.OratewC_pm = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e3;

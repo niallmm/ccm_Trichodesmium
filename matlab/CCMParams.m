@@ -7,7 +7,7 @@ classdef CCMParams
         jc = 0.6;        % active uptake rate of HCO3- (cm/s)
         kcC = 1e-3;        % permeability of carboxysome to CO2 (cm/s)
         kcH = 1e-3;      % permeability of carboxysome to HCO3- cm/s
-        k = 1e-3;
+%         k = 1e-3;
 
         Rc = 5e-6;       % radius of c-some (cm)
         Rb = 5e-5;       % radius of cell (cm)
@@ -23,7 +23,7 @@ classdef CCMParams
         kRub = 26;           % rxns/s maximum reaction rate at single active site
         NRub = 2160;         % number of RuBisCO active sites
         Km_8 = 270;            % half max reaction rate of RuBisCO, uM
-        KO = 1000;           % uM
+        KO_8 = 1000;           % uM
         O = 260;             % uM, calculated from ambient O2
         S_sat = 13;          % Specificity ratio when RuBisCO is saturated
 
@@ -80,6 +80,8 @@ classdef CCMParams
         Keq         % pH dependent equilibrium constant of carbonic anhydrase
         kRub_pH     % pH dependent RuBisCO reaction rate/s at single reaction site
         Km    % pH dependent RuBisCO 1/2 max concentration
+        KO          % pH dependent RuBisCO 1/2 max concentration for oxygen, 
+                    % interpreted from pH dependence of Km
         
         Hout
         Cout
@@ -124,18 +126,51 @@ classdef CCMParams
             VmaxpH8 = interp1(rxn.pH, rxn.Vmax, 8); % find value of Vmax at pH 8 from data
             if (obj.pH > 8.36) || (obj.pH < 6)
                 warning('pH is out of range of experimental RuBisCO measurements')
-            end
+                if (obj.pH < 6)
+                    temp = interp1(rxn.pH, rxn.Vmax, 6); % find value of Vmax at pH we want from data
+                    value = temp*obj.kRub/VmaxpH8;
+                end
+                if (obj.pH>8)
+                   temp = interp1(rxn.pH, rxn.Vmax, 6);
+                   value = temp*obj.kRub/VmaxpH8;
+                end
+            else
             temp = interp1(rxn.pH, rxn.Vmax, obj.pH); % find value of Vmax at pH we want from data
             value = temp*obj.kRub/VmaxpH8; % scale the interpolated value by our known kRub rate at pH 8
             % need to scale because the data was not in the right units.
             % now it is scaled to rxns/s per active site
+            end
         end
         function value = get.Km(obj)
             rxn = load('pH_Km.mat');
             if (obj.pH > 8.36) || (obj.pH < 6)
                 warning('pH is out of range of experimental RuBisCO measurements')
+                
+                if (obj.pH <6)
+                    value = interp1(rxn.pH, rxn.Km, 6)*1e3; % Km was in mM
+                end
+                if obj.pH>8.36
+                    value = interp1(rxn.pH, rxn.Km, 8)*1e3;
+                end
+            else
+                value = interp1(rxn.pH, rxn.Km, obj.pH)*1e3; % Km was in mM
             end
-            value = interp1(rxn.pH, rxn.Km, obj.pH)*1e3; % Km was in mM
+        end
+        
+        function value = get.KO(obj)
+            rxn = load('pH_Km.mat');
+            if (obj.pH > 8.36) || (obj.pH < 6)
+                warning('pH is out of range of experimental RuBisCO measurements')
+                
+                if (obj.pH <6)
+                    value = interp1(rxn.pH, rxn.Km, 6)*1e3*obj.KO_8/obj.Km_8; % Km was in mM
+                end
+                if obj.pH>8.36
+                    value = interp1(rxn.pH, rxn.Km, 8)*1e3*obj.KO_8/obj.Km_8;
+                end
+            else
+                value = interp1(rxn.pH, rxn.Km, obj.pH)*1e3*obj.KO_8/obj.Km_8; % Km was in mM
+            end
         end
         
         function value = get.VmaxCsome(obj)
@@ -173,23 +208,28 @@ classdef CCMParams
             % second term is deltaH*log(10)*pH, where deltaH = 1 from
             % HCO3- -> H20+CO2
         end
+        function value = get.Cout(obj)
+                value = 10; % assumes 10 uM is the concentration from Henry's law
+%             delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
+%             delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
+%             delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
+%             prop_C = exp(-delGp0CO2/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
+%                 exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
+%             value =obj.Ci_tot*prop_C;
+        end
         function value = get.Hout(obj)
             delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
             delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
             delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
             prop_H = exp(-delGp0HCO3/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
                 exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
-            value =obj.Ci_tot*prop_H;
-        end
-        function value = get.Cout(obj)
-
-            delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
-            delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
-            delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
-            prop_C = exp(-delGp0CO2/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
+            prop_H2 = exp(-delGp0H2CO3/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
                 exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
-            value =obj.Ci_tot*prop_C;
+            B = prop_H2/(1-prop_H2);
+%             value =obj.Ci_tot*prop_H;
+            value = prop_H*(1+ B)*obj.Cout/(1-prop_H-B);
         end
+
     end
     
     methods (Abstract)

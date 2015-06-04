@@ -21,12 +21,17 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 ccm_params_just_rbc.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params_just_rbc.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params_just_rbc.S_sat = 43;  % specificity ratio
-ccm_params_just_rbc.KO = 972;    % uM
+ccm_params_just_rbc.KO_8 = 972;    % uM
 
 ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params.S_sat = 43;  % specificity ratio
-ccm_params.KO = 972;    % uM
+ccm_params.KO_8 = 972;    % uM
+
+ccm_params.pH_out = 7;
+ccm_params_scaffold.pH_out = 7;
+ccm_params_cell.pH_out = 7;
+ccm_params_just_rbc.pH_out =7;
 
 
 % We are sweeping over cytoplasmic pH and calculating implied
@@ -36,7 +41,7 @@ ccm_params.KO = 972;    % uM
 % I know of no cells with an intracellular pH below 6. The only reason 
 % we start the pH sweep below 6 is that the original model was using an
 % implied pH of ~= 4 (calculated from the bicarbonate permeability used).
-pH = linspace(6, 8.3, 30);
+pH = linspace(4, 8.3, 40);
 kmH = zeros(30);
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
@@ -74,7 +79,8 @@ end
 % TODO: warning that CA not saturated in this case?? does this make sense?
 for i =  1:length(pH)  
     ccm_params_scaffold.pH = pH(i);
-    ccm_params_scaffold.k = 1.0;
+    ccm_params_scaffold.kcC = 1.0;
+    ccm_params_scaffold.kcH = 1.0;
     
     % Calculate the optimal jc.
     jc_opt_scaffold(i) = ccm_params_scaffold.CalcOptimalJc(Hmax);

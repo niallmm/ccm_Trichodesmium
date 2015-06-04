@@ -5,11 +5,13 @@
     figure
     semilogy(pH, abs(Hin), 'r')
     hold on
+    
     plot(pH, abs(Hleak), 'k')
     plot(pH, abs(Cleak), 'g')
+        semilogy(pH, abs(CratewO), 'b')
     xlabel('Cytoplasmic pH')
     ylabel('inorganic carbon fluxes (picomoles/s)')
-    legend('HCO_3^- transport', 'HCO_3^- leakage', 'CO_2 leakage')
+    legend('HCO_3^- transport', 'HCO_3^- leakage', 'CO_2 leakage', 'carboxylation')
     
     figure
     semilogy(pH, abs(CratewO), 'b')

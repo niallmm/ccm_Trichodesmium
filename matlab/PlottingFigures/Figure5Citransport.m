@@ -1,13 +1,19 @@
 
 % Bicarbonate flux vs facilitated uptake  vs scavenging
-HoutX = linspace(0.2, 0.99, 1e3)*15;
-CoutX = (1-linspace(0.2, 0.99, 1e3))*15;
+
+phoutv = linspace(6, 8.5, 20);
 
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
 p.pH = 8;
-p.jc = 1e-2;
+p.jc = 2e-3;
 p.alpha = p.jc;
+p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+p.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+p.S_sat = 43;  % specificity ratio
+p.KO = 972;    % uM
+p.Ci_tot = 15000;
+
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
 
@@ -16,9 +22,8 @@ fignum = 10;
 % for i = 1:100:length(HoutX)
 for m = 1:length(klist)
     p.k = klist(m);
-    for i = 1:length(HoutX)
-          p.Hout = HoutX(i);
-          p.Cout = CoutX(i);
+    for i = 1:length(phoutv)
+          p.pH_out = phoutv(i);
           exec = FullCCMModelExecutor(p);
           res = exec.RunAnalytical();
         % all converted to picomoles

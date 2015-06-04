@@ -1,7 +1,7 @@
 ksweep = logspace(-9, 2, 1e3);
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
-p.Hout = 15;
+p.Ci_tot = 15;
 p.pH = 8;
 p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 p.Km_8 = 340;    % half max reaction rate of RuBisCO, uM

@@ -14,17 +14,17 @@ ccm_params_just_rbc = CCMParams_NoCsome;
 ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params.S_sat = 43;  % specificity ratio
-ccm_params.KO = 972;    % uM
+ccm_params.KO_8 = 972;    % uM
 
 ccm_params_scaffold.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params_scaffold.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params_scaffold.S_sat = 43;  % specificity ratio
-ccm_params_scaffold.KO = 972;    % uM
+ccm_params_scaffold.KO_8 = 972;    % uM
 
 ccm_params_cell.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params_cell.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params_cell.S_sat = 43;  % specificity ratio
-ccm_params_cell.KO = 972;    % uM
+ccm_params_cell.KO_8 = 972;    % uM
 
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
 % which has a much higher specificity to CO2 and much lower KM than the
@@ -54,7 +54,8 @@ kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
 alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 
 ccm_params.pH = 8;
-ccm_params.k = kc_opt;
+ccm_params.kcH = kc_opt;
+ccm_params.kcC = kc_opt;
 % Calculate carbon fate for cells w/ carboxysomes
 for i =  1:length(pHoutv)  
     ccm_params.pH_out= pHoutv(i);
