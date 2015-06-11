@@ -74,7 +74,7 @@ classdef NoCsomeAnalyticalSolution
             obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
             obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
             
-            obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
+            obj.VO = p.VmaxCell_pH8*p.KO/(p.Km_8*p.S_sat);
 
             
             obj.CratewO_pm = p.Vmax*obj.c_cyto_uM...
