@@ -12,11 +12,9 @@ classdef CCMParams
         D = 1e-5;        % diffusion constant (cm^2/s)
 
         kmC = 0.3;       % cm/s permiability of outer membrane to CO2
-%         Hout = 14.8352;	 % external bicarbonate concentration (microM) see Fluxconversion.m
-%         Cout = 0.1648;	 % external  carbon dioxide concentration Salon 1996 pg 252 (microM)
          alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
         Cout = 15;          % microM from Henry's law.
-        % values at pH 8 -- will be used to re-scale pH dependence in
+        % values at pH 7.8 -- will be used to re-scale pH dependence in
         % function
         kRub = 11.6;           % rxns/s maximum reaction rate at single active site
         NRub = 2000;         % number of RuBisCO active sites
@@ -35,7 +33,10 @@ classdef CCMParams
         kmH_base = 3e-3; % cm/s this is the permeability of the membrane to pure H2CO3
         h_cyto_exp = 3000;   %uM of inorganic carbon expected in the cytosol
         
-        pH_out = 7;
+        pH_out = 7;         % extracellular pH, 7 is around freshwater
+        
+        salt = 0;           % is this 1, salt water (or 0, freshwater) 
+
     end
     
     % Values that cannot be edited by client code since they are physical
@@ -43,13 +44,12 @@ classdef CCMParams
     properties (Constant)
         Na = 6.022e23;       % Avogadro's number is constant, of course.
         RT = 2.4788;           % (R = 8.314e-3 kJ/(K*mol))*(298.15 K)
-        delG0water = -237.19;  % kJ/mol deltaG0 of water (see bicarbonator)
-        delG0CO2 = -386.02;    % kJ/mol for CO2
-        delG0HCO3 = -586.8;   % kJ/mol for HCO3-
-        delG0H2CO3 = -606.3;  % kJ/mol for H2CO3
-        delGHC = 586.77 -386.02-237.19;     % deltaG0' for HCO3- to CO2
-        delGHH = 586.8 - 623.2;     % deltaG0' for HCO3- to H2CO3
-        pKa = (-586.77 + 606.33)/2.48/log(10);  % from deltaGHH
+        
+        % pKa's for Ci pool in the cytosol, calculated assuming I = 0.2
+        pKa1_cyto = 3.16;   % pKa for the H2CO3 to HCO3- equilibrium
+        pKa2_cyto = 9.8;    % pKa for CO3(-2) to HCO3- equilibrium
+        pKa_eff_cyto = 6.1; % effective pKa for CO2 to HCO3- equilibrium
+        
 
     end
     
@@ -75,6 +75,7 @@ classdef CCMParams
         
         %pH dependent things
         kmH         % cm/s permiability of outer membrane to HCO3- ph dependent
+        kmH_out     % same as above, but with external
         Keq         % pH dependent equilibrium constant of carbonic anhydrase
         kRub_pH     % pH dependent RuBisCO reaction rate/s at single reaction site
         Km    % pH dependent RuBisCO 1/2 max concentration
@@ -84,6 +85,12 @@ classdef CCMParams
         Hout
        % Cout < ---- now in first properties section (10 uM from Henry's
        % law)
+       
+        % pKa's for Ci pool ouside the cell, can be for either freshwater or
+        % saltwater
+        pKa1_out
+        pKa2_out
+        pKa_eff_out
     end
     
     properties (Abstract)
@@ -199,6 +206,33 @@ classdef CCMParams
         function value = get.VcaCell(obj)
             value = obj.kCAC * obj.NCA * 1e6/(obj.Vcell * obj.Na * 1e-3);
         end
+        function value = get.pKa1_out(obj)
+            if obj.salt == 0
+                value = 3.26;
+            elseif obj.salt == 1
+                value = 3.1;
+            else 
+                warning('salt is set to a value other than 0 or 1 in CCMParams.m')
+            end
+        end
+        function value = get.pKa2_out(obj)
+            if obj.salt == 0
+                value = 10;
+            elseif obj.salt == 1
+                value = 8.91;
+            else 
+                warning('salt is set to a value other than 0 or 1 in CCMParams.m')
+            end
+        end
+        function value = get.pKa_eff_out(obj)
+            if obj.salt == 0
+                value = 6.2;
+            elseif obj.salt == 1
+                value = 5.86;
+            else 
+                warning('salt is set to a value other than 0 or 1 in CCMParams.m')
+            end
+        end
         
         function value = get.kmH(obj)
             value = obj.kmH_base*10^(obj.pKa - obj.pH);
@@ -209,15 +243,7 @@ classdef CCMParams
             % second term is deltaH*log(10)*pH, where deltaH = 1 from
             % HCO3- -> H20+CO2
         end
-%         function value = get.Cout(obj)
-%                 value = 10; % assumes 10 uM is the concentration from Henry's law
-% %             delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
-% %             delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
-% %             delGp0H2CO3 = obj.delG0H2CO3 + log(10)*obj.RT*obj.pH_out*2;
-% %             prop_C = exp(-delGp0CO2/obj.RT)/(exp(-delGp0HCO3/obj.RT)+...
-% %                 exp(-delGp0CO2/obj.RT) + exp(-delGp0H2CO3/obj.RT));
-% %             value =obj.Ci_tot*prop_C;
-%         end
+
         function value = get.Hout(obj)
             delGp0CO2 =obj.delG0CO2 + obj.delG0water + log(10)*obj.RT*obj.pH_out*2;
             delGp0HCO3 = obj.delG0HCO3 + log(10)*obj.RT*obj.pH_out;
