@@ -3,44 +3,30 @@
 function [H, C] = CHconc_NoCsome(jc_in, ccm_params)
 
 p = ccm_params;
-jc = jc_in;
-alpha = p.alpha;
-kmH = p.kmH;
-Rb = p.Rb;
-D = p.D;
-kmC = p.kmC;
-kmH = p.kmH;
-Hout = p.Hout; 
-Cout = p.Cout;
-Vmax = p.Vmax;
-Km = p.Km;
-Kca = p.Kca;
-Kba = p.Kba;
-Vba = p.Vba;
-Vca = p.Vca;
+
 
 % jc = jcsweep;
 % CA equilibriates + Rub
-N2 = kmC*Cout+(jc+kmH)*Hout;
-M2 = kmC*(1+kmH*Vca*Kba/(kmC*Vba*Kca));
+N2 = p.kmC*p.Cout+(p.jc+p.kmH_out)*p.Hout;
+M2 = p.kmC*(1+p.kmH_in/p.Keq);
 
-CcytoRub = 0.5*(N2/M2 - Rb*Vmax/(3*M2) - Km)...
-          +0.5*sqrt((Km-N2/M2 + Rb*Vmax/(3*M2)).^2 + 4*Km*N2/M2);
+CcytoRub = 0.5*(N2/M2 - p.Rb*p.Vmax/(3*M2) - p.Km)...
+          +0.5*sqrt((p.Km-N2/M2 + p.Rb*p.Vmax/(3*M2)).^2 + 4*p.Km*N2/M2);
 
-HcytoRub= Vca*Kba*CcytoRub/(Vba*Kca);
+HcytoRub= CcytoRub/p.Keq;
       
-CcytoRubsat = N2/M2 - Rb*Vmax/3;
+CcytoRubsat = N2/M2 - p.Rb*p.Vmax/3;
 
-CcytoRubunsat = N2/(M2+Rb*Vmax/(3*Km));
+CcytoRubunsat = N2/(M2+p.Rb*p.Vmax/(3*p.Km));
 
 % CA saturated
 
-CcytoCAsat0 = kmC*Cout/(alpha+kmC) + Vba*(Rb/(3*(alpha+kmC))+ Rb^2/(6*D));
+CcytoCAsat0 = p.kmC*p.Cout/(p.alpha+p.kmC) + p.Vba*(p.Rb/(3*(p.alpha+p.kmC))+ p.Rb^2/(6*p.D));
 
-CcytoCAsatRb = kmC*Cout/(alpha+kmC) + Vba*(Rb/(3*(alpha+kmC)));
+CcytoCAsatRb = p.kmC*p.Cout/(p.alpha+p.kmC) + p.Vba*(p.Rb/(3*(p.alpha+p.kmC)));
 
-HcytoCAsat0 = -Vba*(Rb^2/(6*D) + Rb/(3*kmH)) + (jc+kmH)*Hout/kmH ...
-                + alpha*CcytoCAsatRb/kmH;
+HcytoCAsat0 = -p.Vba*(p.Rb^2/(6*p.D) + p.Rb/(3*p.kmH_in)) + (p.jc+p.kmH_out)*p.Hout/p.kmH_in ...
+                + p.alpha*CcytoCAsatRb/p.kmH_in;
 
             
 if  CcytoRub>=CcytoCAsat0

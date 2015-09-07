@@ -1,6 +1,7 @@
 classdef CCMParams_Csome < CCMParams
     % Object defining CCM parameters - encapsulates various dependent
     % calculations of rates and volumes. 
+
     
     properties (Dependent)
         % Non-dimensional params

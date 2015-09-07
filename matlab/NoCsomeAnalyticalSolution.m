@@ -37,20 +37,20 @@ classdef NoCsomeAnalyticalSolution
             p = ccm_params;
             
             % CA equilibriates + Rub
-            N2 = p.kmC*p.Cout+(p.jc+p.kmH)*p.Hout;
-            M2 = p.kmC*(1+p.kmH*p.Vca*p.Kba/(p.kmC*p.Vba*p.Kca));
+            N2 = p.kmC*p.Cout+(p.jc+p.kmH_out)*p.Hout;
+            M2 = p.kmC*(1+p.kmH_in*p.Keq/p.kmC);
             
             CcytoRub = 0.5*(N2/M2 - p.Rb*p.Vmax/(3*M2) - p.Km)...
                 +0.5*sqrt((p.Km-N2/M2 + p.Rb*p.Vmax/(3*M2)).^2 + 4*p.Km*N2/M2);
             
-            HcytoRub= p.Vca*p.Kba*CcytoRub/(p.Vba*p.Kca);
+            HcytoRub= CcytoRub*p.Keq;
             
             
             % CA saturated case
             CcytoCAsat0 = p.kmC*p.Cout/(p.alpha+p.kmC) + p.VbaCell*(p.Rb/(3*(p.alpha+p.kmC))+ p.Rb^2/(6*p.D));
             CcytoCAsatRb = p.kmC*p.Cout/(p.alpha+p.kmC) + p.VbaCell*(p.Rb/(3*(p.alpha+p.kmC)));
-            HcytoCAsat0 = -p.VbaCell*(p.Rb^2/(6*p.D) + p.Rb/(3*p.kmH)) + (p.jc+p.kmH)*p.Hout/p.kmH ...
-                + p.alpha*CcytoCAsatRb/p.kmH;
+            HcytoCAsat0 = -p.VbaCell*(p.Rb^2/(6*p.D) + p.Rb/(3*p.kmH_in)) + (p.jc+p.kmH_out)*p.Hout/p.kmH_in ...
+                + p.alpha*CcytoCAsatRb/p.kmH_in;
             
             diff= CcytoRub-CcytoCAsat0;
             
@@ -74,7 +74,7 @@ classdef NoCsomeAnalyticalSolution
             obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
             obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
             
-            obj.VO = p.VmaxCell_pH8*p.KO/(p.Km_8*p.S_sat);
+            obj.VO = p.VmaxCell*p.KO/(p.Km*p.S_sat);
 
             
             obj.CratewO_pm = p.Vmax*obj.c_cyto_uM...
@@ -87,11 +87,11 @@ classdef NoCsomeAnalyticalSolution
                 ./(p.O+p.KO*(1+obj.c_cyto_uM/p.Km))*p.Vcell*1e-3;
             
             obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3;
-            obj.Hleak_pm = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e3;
+            obj.Hleak_pm = (p.kmH_out*p.Hout - p.kmH_in*obj.h_cyto_uM)*p.SAcell*1e3;
             obj.Cleak_pm = p.kmC*(p.Cout - obj.c_cyto_uM)*p.SAcell*1e3;
             
             obj.Hin_um = p.jc*p.Hout*p.SAcell*1e-3;
-            obj.Hleak_um = p.kmH*(p.Hout - obj.h_cyto_uM)*p.SAcell*1e-3;
+            obj.Hleak_um = (p.kmH_out*p.Hout - p.kmH_in*obj.h_cyto_uM)*p.SAcell*1e-3;
             obj.Cleak_um = p.kmC*(p.Cout - obj.c_cyto_uM)*p.SAcell*1e-3;
             
             obj.error = obj.OratewC_pm/(obj.CratewO_pm + obj.OratewC_pm);
