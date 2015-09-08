@@ -33,7 +33,7 @@ classdef CCMParams
         
         pH = 8;
         kmH_base = 3e-3;     % cm/s this is the permeability of the membrane to pure H2CO3
-        h_cyto_exp = 3000;   %uM of inorganic carbon expected in the cytosol
+        h_cyto_exp = 30000;   %uM of inorganic carbon expected in the cytosol
         
         pH_out = 7;          % extracellular pH, 7 is around freshwater
         

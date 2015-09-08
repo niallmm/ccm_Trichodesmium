@@ -7,9 +7,9 @@
 ccm_params = CCMParams_Csome;
 ccm_params_just_rbc = CCMParams_NoCsome;
 
-% ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+% ccm_params.kRub = 11.6;   % rxns/s maximum reaction rate at single active site
 % ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-% ccm_params.S_sat = 43;  % specificity ratio
+% ccm_params.S_sat = 43;    % specificity ratio
 % ccm_params.KO_8 = 972;    % uM
 
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
@@ -19,6 +19,19 @@ ccm_params_just_rbc.kRub = 1.2;
 ccm_params_just_rbc.Km7_8 = 3.3; 
 ccm_params_just_rbc.S_sat = 166;
 ccm_params_just_rbc.KO7_8 = 374;
+
+ccm_params_just_rbc.kRub = 11.6;
+ccm_params_just_rbc.Km7_8 = 340; 
+ccm_params_just_rbc.S_sat = 43;
+ccm_params_just_rbc.KO7_8 = 972;
+
+ccm_params_just_rbc.O = 400;
+ccm_params.O = 400;
+
+ccm_params_just_rbc.I_in = 0;
+ccm_params_just_rbc.I_out = 0;
+ccm_params.I_in = 0;
+ccm_params.I_out = 0;
 
 
  % set exeternal pH
@@ -67,7 +80,7 @@ end
 % as our approximation assumes flux in dominated by active transport.
 
     % set permeability kmH
-    ccm_params_just_rbc.jc = 0;  % no active transport
+    ccm_params_just_rbc.jc = 0;     % no active transport
     ccm_params_just_rbc.NCA = 1e-7; % no carbonic anhydrase
     
 for i =  1:length(CO2extv)
