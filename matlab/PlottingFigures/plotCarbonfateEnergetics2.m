@@ -45,24 +45,24 @@ cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
 % use the oxygenations and carboxylation rates calculated in the analytic
 % and model executor files (calc_Carbonfate_vs_pH.m calls them)
 frac_oxygenation_ccm = OratewC./CratewO;
-frac_oxygenation_cy = OratewC_cy./CratewO_cy;
+% frac_oxygenation_cy = OratewC_cy./CratewO_cy;
 frac_oxygenation_just_rbc = OratewC_just_rbc./CratewO_just_rbc;
 
 % Cost of 2PG recovery on a per-fixation basis in each case.
 cost_2pg_ccm_h = cost_per_2pg * frac_oxygenation_ccm;
-cost_2pg_cy_h = cost_per_2pg * frac_oxygenation_cy;
+% cost_2pg_cy_h = cost_per_2pg * frac_oxygenation_cy;
 cost_2pg_just_rbc_h = cost_per_2pg * frac_oxygenation_just_rbc;
 
 % Total cost of the system in H+/fixation for each case.
 total_cost_ccm_h = cost_2pg_ccm_h + cost_h + cost_fixation;
-total_cost_cy_h = cost_2pg_cy_h + cost_cy_h + cost_fixation;
+% total_cost_cy_h = cost_2pg_cy_h + cost_cy_h + cost_fixation;
 total_cost_just_rbc_h = cost_2pg_just_rbc_h + cost_just_rbc_h + cost_fixation;
 
 % Fraction oxygenation as a function of pH. 
 figure(222)
 semilogy(pH, frac_oxygenation_ccm, 'b');
 hold on;
-semilogy(pH, frac_oxygenation_cy, 'g');
+% semilogy(pH, frac_oxygenation_cy, 'g');
 semilogy(pH, frac_oxygenation_just_rbc, 'r');
 %semilogy(pH, frac_oxygenation_scaffold, 'k');
 title('Ratio of Oxygenations/Carboxylations');
@@ -88,18 +88,18 @@ if plot1 == 1
     xlabel('Cytoplasmic pH');
     title('Full CCM');
     
-    % Cost breakdown of the cytosolic enzymes model as a function of pH.
-    subplot(1,3,2);
-    area(pH, total_cost_cy_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
-    hold on;
-    area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
-    area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
-    plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
-    set(gca, 'Yscale', 'log');
-    axis([pH(1) pH(end) 1e-1 2e8]);
-    set(gca, 'YTick', []);
-    xlabel('Cytoplasmic pH');
-    title('Reactions in Cytosol');
+%     % Cost breakdown of the cytosolic enzymes model as a function of pH.
+%     subplot(1,3,2);
+%     area(pH, total_cost_cy_h, 'FaceColor', [.337,.165,.447], 'BaseValue', 1e-1);
+%     hold on;
+%     area(pH, cost_fixation + cost_2pg_cy_h, 'FaceColor', [.667, .518, .224], 'BaseValue', 1e-1);
+%     area(pH, all_ones .* cost_fixation, 'FaceColor', [.251, .557, .184], 'BaseValue', 1e-1);
+%     plot(pH, total_cost_cy_h, '-k', 'LineWidth', 3);
+%     set(gca, 'Yscale', 'log');
+%     axis([pH(1) pH(end) 1e-1 2e8]);
+%     set(gca, 'YTick', []);
+%     xlabel('Cytoplasmic pH');
+%     title('Reactions in Cytosol');
     
     % Cost breakdown of the cytosolic enzymes model as a function of pH.
     subplot(1,3,3);
@@ -141,22 +141,24 @@ semilogy(pH, cost_pH_maintenance, '--c', 'LineWidth',3)
 title('Full CCM')
 % 
 
-% for model with rxns in Cytosol
-subplot(1,3,2);
-% plot cost of transport/CO2 fixation with pH
-semilogy(pH, cost_cy_h,'Color','r', 'LineWidth', 3);
-axis([pH(1) pH(end) 1e-1 2e7])
-hold on
-ylabel('Energetic Cost H^+ / (CO_2 fixed)')
-xlabel('Cytoplasmic pH')
-text(6, 1e4, 'HCO3^- transport cost', 'Color', 'r')
-% plot cost of fixation/CO2 (flat)
-plot([pH(1) pH(end)], [cost_fixation cost_fixation], '--b');
-text(3, 20, 'Calvin Cycle Fixation', 'Color', 'b');
-% plot cost of photorespiration
-loglog(pH, cost_2pg_cy_h, 'Color','k', 'LineWidth', 3);
-text(6, 5e2, 'Cost of photorespiration', 'Color', 'k')
-title('Reactions in Cytosol')
+% % for model with rxns in Cytosol
+% subplot(1,3,2);
+% % plot cost of transport/CO2 fixation with pH
+% semilogy(pH, cost_cy_h,'Color','r', 'LineWidth', 3);
+% axis([pH(1) pH(end) 1e-1 2e7])
+% hold on
+% ylabel('Energetic Cost H^+ / (CO_2 fixed)')
+% xlabel('Cytoplasmic pH')
+% text(6, 1e4, 'HCO3^- transport cost', 'Color', 'r')
+% % plot cost of fixation/CO2 (flat)
+% plot([pH(1) pH(end)], [cost_fixation cost_fixation], '--b');
+% text(3, 20, 'Calvin Cycle Fixation', 'Color', 'b');
+% % plot cost of photorespiration
+% loglog(pH, cost_2pg_cy_h, 'Color','k', 'LineWidth', 3);
+% text(6, 5e2, 'Cost of photorespiration', 'Color', 'k')
+% title('Reactions in Cytosol')
+
+
 subplot(1,3,3);
 % plot cost of transport/CO2 fixation with pH
 semilogy(pH, cost_just_rbc_h,'Color','r', 'LineWidth', 3);

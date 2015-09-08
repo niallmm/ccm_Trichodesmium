@@ -1,12 +1,8 @@
 
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
-p.Ci_tot = 15;
-p.pH = 8;
-p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
-p.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-p.S_sat = 43;  % specificity ratio
-p.KO = 972;    % uM
+
+
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
        
@@ -15,7 +11,7 @@ kvec = logspace(-9,2, 1e4);
 
 for i = 1:length(kvec)
     p.kcC = kvec(i);
-    p.kcH = 10*p.kcC;
+    p.kcH = p.kcC;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
 
@@ -26,13 +22,13 @@ res = exec.RunAnalytical();
 Ccrit = res.CCAsat0;
 critjc(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
             p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2))./...
-           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH;
+           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % critical jc were Rubisco is saturated
 Ccrit = p.Km;
 critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
             p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2))./...
-           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH;
+           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % calculate jc where carboxylation is 99% 
 % when RuBisCO is saturated: S = vc/vo ~ 13;
@@ -45,12 +41,12 @@ S = 13; % when RuBisCO is saturated
 Ccrit = 99*O2/S;
 critjcRub99(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
             p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2))./...
-           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH;
+           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 Ccrit = 999*O2/13;
 critjcRub999(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
             p.kmC*p.Cout*((p.kmH+p.alpha)*p.GH +p.D/p.Rb^2))./...
-           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH;
+           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
 end
 figure(6)        
 loglog(critjc*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-k')

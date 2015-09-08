@@ -6,16 +6,17 @@ phoutv = linspace(6, 8.5, 20);
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
 p.pH = 8;
+
 %p.jc = 2e-4;
 
 p.alpha = 2e-4;
  p.jc = 2e-4;
 %p.jc = 0;
 % p.alpha= 0;
-p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
-p.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-p.S_sat = 43;  % specificity ratio
-p.KO_8 = 972;    % uM
+% p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+% p.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+% p.S_sat = 43;  % specificity ratio
+% p.KO_8 = 972;    % uM
 % p.Ci_tot = 15; 
 
 exec = FullCCMModelExecutor(p);
