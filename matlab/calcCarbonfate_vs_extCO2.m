@@ -7,23 +7,23 @@
 ccm_params = CCMParams_Csome;
 ccm_params_just_rbc = CCMParams_NoCsome;
 
-ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
-ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-ccm_params.S_sat = 43;  % specificity ratio
-ccm_params.KO_8 = 972;    % uM
+% ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+% ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+% ccm_params.S_sat = 43;  % specificity ratio
+% ccm_params.KO_8 = 972;    % uM
 
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
 % which has a much higher specificity to CO2 and much lower KM than the
 % cyanobacterial RuBisCO. Data from Savir et al., 2010.
 ccm_params_just_rbc.kRub = 1.2;
-ccm_params_just_rbc.Km_8 = 3.3; 
+ccm_params_just_rbc.Km7_8 = 3.3; 
 ccm_params_just_rbc.S_sat = 166;
-ccm_params_just_rbc.KO_8 = 374;
+ccm_params_just_rbc.KO7_8 = 374;
 
 
  % set exeternal pH
-ccm_params.pH_out = 8;
-ccm_params_just_rbc.pH_out = 8;
+ccm_params.pH_out = 7;
+ccm_params_just_rbc.pH_out = 7;
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
 kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
@@ -32,7 +32,7 @@ ccm_params.kcC = kc_opt;
 alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 
 ccm_params.pH = 8; % internal pH
-
+ccm_params_just_rbc.pH = 8;
 
 
 CO2extv = logspace(-2, 5, 50);
@@ -60,16 +60,15 @@ for i =  1:length(CO2extv)
     Houtv(i) = ccm_params.Hout;
 end
 
-    ccm_params_cell.pH = 8;
+
 
 
 % Calculate carbon fate for cells w/o just RuBisCO
 % as our approximation assumes flux in dominated by active transport.
 
     % set permeability kmH
-    ccm_params_just_rbc.pH = 8;
     ccm_params_just_rbc.jc = 0;  % no active transport
-    ccm_params_just_rbc.NCA = 1e-3; % no carbonic anhydrase
+    ccm_params_just_rbc.NCA = 1e-7; % no carbonic anhydrase
     
 for i =  1:length(CO2extv)
     

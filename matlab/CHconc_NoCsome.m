@@ -13,7 +13,7 @@ M2 = p.kmC*(1+p.kmH_in/p.Keq);
 CcytoRub = 0.5*(N2/M2 - p.Rb*p.Vmax/(3*M2) - p.Km)...
           +0.5*sqrt((p.Km-N2/M2 + p.Rb*p.Vmax/(3*M2)).^2 + 4*p.Km*N2/M2);
 
-HcytoRub= CcytoRub/p.Keq;
+HcytoRub= CcytoRub*p.Keq;
       
 CcytoRubsat = N2/M2 - p.Rb*p.Vmax/3;
 

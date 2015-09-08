@@ -17,6 +17,7 @@ classdef CCMParams
         
         % values at pH 7.8 -- will be used to re-scale pH dependence in
         % function
+        % kRub, Km_8, KO, Ssat are all for Synechococcus 6301 from Savir
         kRub = 11.6;           % rxns/s maximum reaction rate at single active site
         NRub = 2000;         % number of RuBisCO active sites
         Km7_8 = 340;            % half max reaction rate of RuBisCO, uM
@@ -31,18 +32,18 @@ classdef CCMParams
         Kba = 9.3*1e3;       % uM half max reaction rate for bicarbonate dehydration
         
         pH = 8;
-        kmH_base = 3e-3; % cm/s this is the permeability of the membrane to pure H2CO3
+        kmH_base = 3e-3;     % cm/s this is the permeability of the membrane to pure H2CO3
         h_cyto_exp = 3000;   %uM of inorganic carbon expected in the cytosol
         
-        pH_out = 7;         % extracellular pH, 7 is around freshwater
+        pH_out = 7;          % extracellular pH, 7 is around freshwater
         
-        I_out = 0.2;           % ionic strength of solution:
-        %0.2 is representative of cytosol
+        I_out = 0.2;            % ionic strength of solution:
+                                %0.2 is representative of cytosol
         I_in =  0.05;           %0.05 is representative of freshwater
         
         salt = 0;           % if freshwater (salt =0) we calculate pKas analytically
-        % if saltwater (salt = 1) we set pKas
-        % emperically
+                            % if saltwater (salt = 1) we set pKas
+                            % emperically
         
     end
     
