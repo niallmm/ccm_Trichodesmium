@@ -41,31 +41,31 @@ kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
 alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 
 % Calculate carbon fate for cells w/ carboxysomes
-% for i =  1:length(pH)  
-%     ccm_params.pH = pH(i);
-%     ccm_params.kcC = kc_opt;
-%     ccm_params.kcH = kc_opt;
+for i =  1:length(pH)  
+    ccm_params.pH = pH(i);
+    ccm_params.kcC = kc_opt;
+    ccm_params.kcH = kc_opt;
 %     CCMParams calculates the implied kmH for us.
-%     kmH(i) = ccm_params.kmH_in; 
-%     
+    kmH(i) = ccm_params.kmH_in; 
+    
 %     Calculate the optimal jc.
-%     jc_opt(i) = ccm_params.CalcOptimalJc(Hmax);
-%     ccm_params.jc = jc_opt(i);
-%     
+    jc_opt(i) = ccm_params.CalcOptimalJc(Hmax);
+    ccm_params.jc = jc_opt(i);
+    
 %     Run the model
-%     executor = FullCCMModelExecutor(ccm_params);
-%     res = executor.RunAnalytical();
-%     Hin(i) = res.Hin_pm;
-%     CratewO(i) = res.CratewO_pm;
-%     Ccyto(i) = res.c_cyto_uM;
-%     Ccsome(i) = res.c_csome_uM;
-%     Hcsome(i) = res.h_csome_uM;
-%     OratewC(i) = res.OratewC_pm;
-%     OHrateCA(i) = res.OHrate_pm;
-%     Hleak(i) = res.Hleak_pm;
-%     Cleak(i) = res.Cleak_pm;
-%     
-% end
+    executor = FullCCMModelExecutor(ccm_params);
+    res = executor.RunAnalytical();
+    Hin(i) = res.Hin_pm;
+    CratewO(i) = res.CratewO_pm;
+    Ccyto(i) = res.c_cyto_uM;
+    Ccsome(i) = res.c_csome_uM;
+    Hcsome(i) = res.h_csome_uM;
+    OratewC(i) = res.OratewC_pm;
+    OHrateCA(i) = res.OHrate_pm;
+    Hleak(i) = res.Hleak_pm;
+    Cleak(i) = res.Cleak_pm;
+    
+end
 % 
 % Calculate carbon fate for cells w/ carboxysomes but no shell
 % TODO: warning that CA not saturated in this case?? does this make sense?
