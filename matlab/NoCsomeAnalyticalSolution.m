@@ -40,7 +40,7 @@ classdef NoCsomeAnalyticalSolution
             N2 = p.kmC*p.Cout+(p.jc+p.kmH_out)*p.Hout;
             M2 = p.kmC*(1+p.kmH_in*p.Keq/p.kmC);
             
-            CcytoRub = 0.5*(N2/M2 - p.Rb*p.VmaxCell/(3*M2) - p.Km)...
+            CcytoRub = 0.5*(N2/M2 - p.Rb*p.Vmax/(3*M2) - p.Km)...
                 +0.5*sqrt((p.Km-N2/M2 + p.Rb*p.Vmax/(3*M2)).^2 + 4*p.Km*N2/M2);
             
             HcytoRub= CcytoRub*p.Keq;
@@ -74,7 +74,7 @@ classdef NoCsomeAnalyticalSolution
             obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
             obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
             
-            obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
+            obj.VO = p.VmaxCell*p.KO/(p.Km*p.S_sat);
 
             
             obj.CratewO_pm = p.Vmax*obj.c_cyto_uM...

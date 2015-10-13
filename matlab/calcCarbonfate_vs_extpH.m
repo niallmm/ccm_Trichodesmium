@@ -15,16 +15,16 @@ ccm_params.kRub = 11.6; % rxns/s maximum reaction rate at single active site
 ccm_params.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
 ccm_params.S_sat = 43;  % specificity ratio
 ccm_params.KO_8 = 972;    % uM
-% 
-% ccm_params_scaffold.kRub = 11.6; % rxns/s maximum reaction rate at single active site
-% ccm_params_scaffold.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-% ccm_params_scaffold.S_sat = 43;  % specificity ratio
-% ccm_params_scaffold.KO_8 = 972;    % uM
-% 
-% ccm_params_cell.kRub = 11.6; % rxns/s maximum reaction rate at single active site
-% ccm_params_cell.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
-% ccm_params_cell.S_sat = 43;  % specificity ratio
-% ccm_params_cell.KO_8 = 972;    % uM
+
+ccm_params_scaffold.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+ccm_params_scaffold.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+ccm_params_scaffold.S_sat = 43;  % specificity ratio
+ccm_params_scaffold.KO_8 = 972;    % uM
+
+ccm_params_cell.kRub = 11.6; % rxns/s maximum reaction rate at single active site
+ccm_params_cell.Km_8 = 340;    % half max reaction rate of RuBisCO, uM
+ccm_params_cell.S_sat = 43;  % specificity ratio
+ccm_params_cell.KO_8 = 972;    % uM
 
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
 % which has a much higher specificity to CO2 and much lower KM than the
@@ -76,47 +76,47 @@ for i =  1:length(pHoutv)
     OHrateCA(i) = res.OHrate_pm;
 end
 
-% % Calculate carbon fate for cells w/ carboxysomes but no shell
-% % TODO: warning that CA not saturated in this case?? does this make sense?
-% 
-%     ccm_params_scaffold.pH = 8;
-%     ccm_params_scaffold.k = 1.0;
-% for i =  1:length(pHoutv)  
-%     ccm_params_scaffold.pH_out = pHoutv(i);
-%     % Calculate the optimal jc.
-%     jc_opt_scaffold(i) = ccm_params_scaffold.CalcOptimalJc(Hmax);
-%     ccm_params_scaffold.jc = jc_opt(i);
-%     
-%     % Run the model
-%     executor = FullCCMModelExecutor(ccm_params_scaffold);
-%     res = executor.RunAnalytical();
-%     Hin_scaffold(i) = res.Hin_pm;
-%     CratewO_scaffold(i) = res.CratewO_pm;
-%     Ccyto_scaffold(i) = res.c_cyto_uM;
-%     Ccsome_scaffold(i) = res.c_csome_uM;
-%     Hcsome_scaffold(i) = res.h_csome_uM;
-% end
-% 
-%     ccm_params_cell.pH = 8;
-% 
-% % Calculate carbon fate for cells w/o carboxysomes
-% for i =  1:length(pHoutv)
-%     ccm_params_cell.pH_out = pHoutv(i);
-%     % CCMParams calculates the implied kmH for us.
-%     jc_opt_cell(i) = ccm_params_cell.CalcOptimalJc(Hmax);
-%     ccm_params_cell.jc = jc_opt_cell(i);
-%     
-%     % note: k (ci uptake rate into cbsome) meaningless in this case as 
-%     % there is no no cbsome
-%     
-%     % Run the model
-%     executor = NoCsomeModelExecutor(ccm_params_cell);
-%     res = executor.RunAnalytical();
-%     Hin_cy(i) = res.Hin_pm;
-%     CratewO_cy(i) = res.CratewO_pm;
-%     Ccyto_cy(i) = res.c_cyto_uM;
-%     OratewC_cy(i) = res.OratewC_pm;
-% end
+% Calculate carbon fate for cells w/ carboxysomes but no shell
+% TODO: warning that CA not saturated in this case?? does this make sense?
+
+    ccm_params_scaffold.pH = 8;
+    ccm_params_scaffold.k = 1.0;
+for i =  1:length(pHoutv)  
+    ccm_params_scaffold.pH_out = pHoutv(i);
+    % Calculate the optimal jc.
+    jc_opt_scaffold(i) = ccm_params_scaffold.CalcOptimalJc(Hmax);
+    ccm_params_scaffold.jc = jc_opt(i);
+    
+    % Run the model
+    executor = FullCCMModelExecutor(ccm_params_scaffold);
+    res = executor.RunAnalytical();
+    Hin_scaffold(i) = res.Hin_pm;
+    CratewO_scaffold(i) = res.CratewO_pm;
+    Ccyto_scaffold(i) = res.c_cyto_uM;
+    Ccsome_scaffold(i) = res.c_csome_uM;
+    Hcsome_scaffold(i) = res.h_csome_uM;
+end
+
+    ccm_params_cell.pH = 8;
+
+% Calculate carbon fate for cells w/o carboxysomes
+for i =  1:length(pHoutv)
+    ccm_params_cell.pH_out = pHoutv(i);
+    % CCMParams calculates the implied kmH for us.
+    jc_opt_cell(i) = ccm_params_cell.CalcOptimalJc(Hmax);
+    ccm_params_cell.jc = jc_opt_cell(i);
+    
+    % note: k (ci uptake rate into cbsome) meaningless in this case as 
+    % there is no no cbsome
+    
+    % Run the model
+    executor = NoCsomeModelExecutor(ccm_params_cell);
+    res = executor.RunAnalytical();
+    Hin_cy(i) = res.Hin_pm;
+    CratewO_cy(i) = res.CratewO_pm;
+    Ccyto_cy(i) = res.c_cyto_uM;
+    OratewC_cy(i) = res.OratewC_pm;
+end
 
 % Calculate carbon fate for cells w/o just RuBisCO
 % TODO(flamholz): may need to account for differt pH inside and outside

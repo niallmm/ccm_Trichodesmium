@@ -19,14 +19,14 @@ ccm_params_just_rbc.kRub = 1.2;
 ccm_params_just_rbc.Km7_8 = 3.3; 
 ccm_params_just_rbc.S_sat = 166;
 ccm_params_just_rbc.KO7_8 = 374;
-% 
-% ccm_params_just_rbc.kRub = 11.6;
-% ccm_params_just_rbc.Km7_8 = 340; 
-% ccm_params_just_rbc.S_sat = 43;
-% ccm_params_just_rbc.KO7_8 = 972;
 
-ccm_params_just_rbc.O = 300;
-ccm_params.O = 300;
+ccm_params_just_rbc.kRub = 11.6;
+ccm_params_just_rbc.Km7_8 = 340; 
+ccm_params_just_rbc.S_sat = 43;
+ccm_params_just_rbc.KO7_8 = 972;
+
+ccm_params_just_rbc.O = 400;
+ccm_params.O = 400;
 
 ccm_params_just_rbc.I_in = 0;
 ccm_params_just_rbc.I_out = 0;
@@ -35,8 +35,8 @@ ccm_params.I_out = 0;
 
 
  % set exeternal pH
-ccm_params.pH_out = 8;
-ccm_params_just_rbc.pH_out = 8;
+ccm_params.pH_out = 7;
+ccm_params_just_rbc.pH_out = 7;
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
 kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.

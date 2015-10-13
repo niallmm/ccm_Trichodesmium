@@ -58,9 +58,9 @@ legend('CCM', 'cytosolic enzymes', 'RuBisCO alone', 'scaffolded enzymes');
 
 figure(111)
 
-loglog(CO2extv*1e-6, total_cost_ccm_h, 'k')
+loglog(CO2extv, total_cost_ccm_h, 'k')
 hold on
-loglog(CO2extv*1e-6, total_cost_just_rbc_h, 'b')
+loglog(CO2extv, total_cost_just_rbc_h, 'b')
 axis([1e-2 1e5 10 4e5]);
 xlabel('External CO_2 concentration (\muM)')
 ylabel('Energetic Cost H^+ / (CO_2 fixed)')
