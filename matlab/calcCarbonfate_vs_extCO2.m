@@ -1,6 +1,7 @@
 % Calculate carbon fate breakdown for varying kmH and plot bicarbonate
 % transport per CO2 fixed
 
+
 % Params for 2 cases.
 % 1: cell has full CCM.
 % 2: cell has just RuBisCO.
@@ -35,8 +36,8 @@ ccm_params.I_out = 0;
 
 
  % set exeternal pH
-ccm_params.pH_out = 8;
-ccm_params_just_rbc.pH_out = 8;
+ccm_params.pH_out = 7;
+ccm_params_just_rbc.pH_out = 7;
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
 kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
@@ -44,8 +45,8 @@ ccm_params.kcH = kc_opt;
 ccm_params.kcC = kc_opt;
 alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 
-ccm_params.pH = 8; % internal pH
-ccm_params_just_rbc.pH = 8;
+ccm_params.pH = 8.3; % internal pH
+ccm_params_just_rbc.pH = 8.3;
 
 
 CO2extv = logspace(-2, 5, 50);
