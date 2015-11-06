@@ -25,7 +25,7 @@ classdef CCMParams
         O = 300;             % uM, calculated from ambient O2
         S_sat = 43;          % Specificity ratio when RuBisCO is saturated
         
-        kCAH = 4.6e4*0.9;    % maximum rate of bicarbonate dehydration by CA /active site @ pH = 8
+        kCAH = 4.6e4;    % maximum rate of bicarbonate dehydration by CA /active site @ pH = 8
         kCAC = 8e4;          % maximum rate of carbon dioxide hydration by CA /active site
         NCA = 100;            % number of active sites
         Kca = 3.2*1e3;       % uM half max reaction rate for carbon dioxide hydration
@@ -37,9 +37,9 @@ classdef CCMParams
         
         pH_out = 7;          % extracellular pH, 7 is around freshwater
         
-        I_out = 0.2;            % ionic strength of solution:
+        I_out = 0.05;            % ionic strength of solution:
                                 %0.2 is representative of cytosol
-        I_in =  0.05;           %0.05 is representative of freshwater
+        I_in =  0.2;           %0.05 is representative of freshwater
         
         salt = 0;           % if freshwater (salt =0) we calculate pKas analytically
                             % if saltwater (salt = 1) we set pKas
@@ -293,8 +293,11 @@ classdef CCMParams
         end
         
         function value = get.Hout(obj)
-            Citotal = obj.Cout*(1+ 10^(-obj.pKa_eff_out)*(10^(obj.pKa1_out)+10^(-obj.pKa2_out + 2*obj.pH_out) + 10^(+obj.pH_out)));
-            value = Citotal/(1+10^(obj.pKa_eff_out-obj.pH_out) + 10^(-obj.pKa2_out+obj.pH_out) + 10^(obj.pKa1_out-obj.pH_out));
+%             Citotal = obj.Cout*(1+ 10^(-obj.pKa_eff_out)*(10^(obj.pKa1_out)...
+%                 +10^(-obj.pKa2_out + 2*obj.pH_out) + 10^(+obj.pH_out)));
+%             value = Citotal/(1+10^(obj.pKa_eff_out-obj.pH_out) ...
+%                 + 10^(-obj.pKa2_out+obj.pH_out) + 10^(obj.pKa1_out-obj.pH_out));
+            value = obj.Cout*10^(-obj.pKa_eff_out+obj.pH_out);
         end
         
     end

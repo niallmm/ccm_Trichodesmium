@@ -28,11 +28,11 @@ ccm_params_just_rbc.KO7_8 = 374;
 
 ccm_params_just_rbc.O = 300;
 ccm_params.O = 300;
-
-ccm_params_just_rbc.I_in = 0;
-ccm_params_just_rbc.I_out = 0;
-ccm_params.I_in = 0;
-ccm_params.I_out = 0;
+% 
+% ccm_params_just_rbc.I_in = 0;
+% ccm_params_just_rbc.I_out = 0;
+% ccm_params.I_in = 0;
+% ccm_params.I_out = 0;
 
 
  % set exeternal pH
