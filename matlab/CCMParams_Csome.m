@@ -34,6 +34,11 @@ classdef CCMParams_Csome < CCMParams
         function jc = CalcOptimalJc(obj, Hmax)
             p = obj;
             Hcytop = @(jc) calcHcytoDiff_Csome(jc, p, Hmax);
+            % Silence warnings for fzero
+            % This prevents the CA non-saturations warning from printing
+            % for every iteration inside fzero. TODO: should we be
+            % concerned that the lack of CA saturation at some points
+            % during the optimization is affecting the optima? 
             warning('off', 'all');
             jc = fzero(Hcytop, 1e-2);
             warning('on', 'all');
