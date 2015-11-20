@@ -2,20 +2,24 @@
 all_ones = ones(size(CO2extv));
 
 % Total cost of the system in H+/fixation for each case.
-total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA);
+total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 1);
+% Case where ATP is used to transport. 1 ATP = 4 H+ by synthase stoich. 
+total_cost_ccm_atp_xport_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 4);
 total_cost_low_pH_ccm_h = totalProtonCost_CCM(Hin_low_pH, ...
-    CratewO_low_pH, OratewC_low_pH, OHrateCA_low_pH);
+    CratewO_low_pH, OratewC_low_pH, OHrateCA_low_pH, 1);
 total_cost_high_perm_ccm_h = totalProtonCost_CCM(Hin_high_perm, ...
-    CratewO_high_perm, OratewC_high_perm, OHrateCA_high_perm);
+    CratewO_high_perm, OratewC_high_perm, OHrateCA_high_perm, 1);
 
-total_cost_just_c3_rbc_h = totalProtonCost_NoCCM(CratewO_just_c3_rbc, ...
+total_cost_just_c3_rbc_h = fixAndRecover_ProtonCost(CratewO_just_c3_rbc, ...
     OratewC_just_c3_rbc);
-total_cost_just_specific_rbc_h = totalProtonCost_NoCCM(...
+total_cost_just_specific_rbc_h = fixAndRecover_ProtonCost(...
     CratewO_just_specific_rbc, OratewC_just_specific_rbc); 
 
 min_total_ccm_cost = bsxfun(@min, total_cost_ccm_h, total_cost_low_pH_ccm_h); 
+min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_ccm_atp_xport_h);
 min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_high_perm_ccm_h);
 max_total_ccm_cost = bsxfun(@max, total_cost_ccm_h, total_cost_low_pH_ccm_h); 
+max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_ccm_atp_xport_h); 
 max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_high_perm_ccm_h); 
 
 % Absolute rates as a function of CO2. 
@@ -28,7 +32,7 @@ loglog(CO2extv, CratewO_just_c3_rbc, 'g');
 loglog(CO2extv, OratewC_just_c3_rbc, '--g');
 loglog(CO2extv, CratewO_just_specific_rbc, 'b');
 loglog(CO2extv, OratewC_just_specific_rbc, '--b');
-%axis([1e-2 1e5 10 4e5]);
+%axis([0.1 50 10 4e5]);
 xlabel('External CO_2 concentration (\muM)')
 ylabel('Carboxylation Flux (units?)')
 title('Carboxylation Flux In Different Models')
@@ -62,7 +66,7 @@ fill([CO2extv fliplr(CO2extv)], ...
      [max_total_ccm_cost fliplr(min_total_ccm_cost)], 'm', ...
      'FaceAlpha', 0.3);
 plot([15 15], [10 500], '--m');
-axis([1e-4 1000 10 500]);
+axis([0.1 100 10 500]);
 set(gca, 'xscale', 'log');
 set(gca, 'yscale', 'log');
 xlabel('External CO_2 concentration (\muM)');

@@ -1,4 +1,4 @@
-function total_cost_h = totalProtonCost_NoCCM(CratewO, OratewC)
+function total_cost_h = fixAndRecover_ProtonCost(CratewO, OratewC)
     % This is the calculated cost of fixing CO2, recovering oxygenation
     % products and re-fixing them. The calculation itself is described in
     % detail in the SI of the paper. Note that this calculation accounts
