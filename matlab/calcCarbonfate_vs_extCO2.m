@@ -96,7 +96,7 @@ for i = 1:length(CO2extv)
     Hcsome_high_perm(i) = res.h_csome_uM;
     OratewC_high_perm(i) = res.OratewC_pm;
     OHrateCA_high_perm(i) = res.OHrate_pm;
-    Houtv_high_perm(i) = ccm_params.Hout;
+    Houtv_high_perm(i) = ccm_params_high_perm.Hout;
 end
 
 disp('full ccm, low cytosolic pH');
@@ -118,7 +118,7 @@ for i = 1:length(CO2extv)
     Hcsome_low_pH(i) = res.h_csome_uM;
     OratewC_low_pH(i) = res.OratewC_pm;
     OHrateCA_low_pH(i) = res.OHrate_pm;
-    Houtv_low_pH(i) = ccm_params.Hout;
+    Houtv_low_pH(i) = ccm_params_low_pH.Hout;
 end
 
 % Calculate carbon fate for cells w/o just RuBisCO
