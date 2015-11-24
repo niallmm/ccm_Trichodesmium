@@ -22,23 +22,34 @@ max_total_ccm_cost = bsxfun(@max, total_cost_ccm_h, total_cost_low_pH_ccm_h);
 max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_ccm_atp_xport_h); 
 max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_high_perm_ccm_h); 
 
+min_carb_flux = bsxfun(@min, CratewO, CratewO_high_perm); 
+min_carb_flux = bsxfun(@min, min_carb_flux, CratewO_low_pH);
+max_carb_flux = bsxfun(@max, CratewO, CratewO_high_perm); 
+max_carb_flux = bsxfun(@max, max_carb_flux, CratewO_low_pH);
+
 % Absolute rates as a function of CO2. 
 figure(333);
 
-loglog(CO2extv, CratewO, 'k');
+loglog(CO2extv, min_carb_flux, 'k');
 hold on
-loglog(CO2extv, OratewC, '--k');
+loglog(CO2extv, max_carb_flux, '--k');
 loglog(CO2extv, CratewO_just_c3_rbc, 'g');
-loglog(CO2extv, OratewC_just_c3_rbc, '--g');
 loglog(CO2extv, CratewO_just_specific_rbc, 'b');
-loglog(CO2extv, OratewC_just_specific_rbc, '--b');
-%axis([0.1 50 10 4e5]);
+loglog(CO2extv, ones(length(CO2extv)) * 5e-9, 'c');
+loglog(CO2extv, ones(length(CO2extv)) * 1.5e-8, '--c');
+plot([15 15], [1e-12 1e-7], '--m');
+axis([min(CO2extv) max(CO2extv) 1e-12 1e-7]);
 xlabel('External CO_2 concentration (\muM)')
 ylabel('Carboxylation Flux (units?)')
 title('Carboxylation Flux In Different Models')
-legend('Full CCM Carboxylation', 'Full CCM Oxygenation', ...
-    'C3 RuBisCO Carboxylation', 'C3 RuBisCO Oxygenation', ...
-    'Specific RuBisCO Carboxylation', 'Specific RuBisCO Oxygenation');
+legend('Full CCM Carboxylation (min prediction)', ...
+    'Full CCM Carboxylation (max prediction)', ...
+    'C3 RuBisCO Carboxylation', ...
+    'Specific RuBisCO Carboxylation', ...
+    'Prochlorococcus MED4 (min measurement)', ...
+    'Prochlorococcus MED4 (max measurement)', ...
+    'Atmospheric CO2', ...
+    'Location', 'southeast');
 legend('boxoff');
 
 % Fraction oxygenation as a function of CO2. 
