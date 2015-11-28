@@ -9,8 +9,8 @@ p.pH = 8;
 
 %p.jc = 2e-4;
 
-p.alpha = 2e-4;
- p.jc = 2e-4;
+% p.alpha = 2e-4;
+%  p.jc = 2e-4;
 %p.jc = 0;
 % p.alpha= 0;
 % p.kRub = 11.6; % rxns/s maximum reaction rate at single active site
@@ -22,13 +22,21 @@ p.alpha = 2e-4;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
 
-fignum = 12;
+fignum = 16;
  klist =[1e-4 1e-2 1];
 % for i = 1:100:length(HoutX)
 %for m = 1:length(klist)
 for m = 1
     p.kcH = klist(m);
     p.kcC = p.kcH;
+    for jj = 2
+        if jj == 1
+            p.alpha = 1e-4;
+            p.jc = 0;
+        else
+            p.jc = 1e-4;
+            p.alpha = 0;
+        end
     for i = 1:length(phoutv)
           p.pH_out = phoutv(i);
           exec = FullCCMModelExecutor(p);
@@ -59,9 +67,12 @@ for m = 1
    % if m == 1
         k_plotting = p.kcH
         figure(fignum)
+
         semilogy(phoutv, Htransport, 'b')
+
         hold on
          plot(phoutv, Cconversion, 'k')
+
 %         figure(223)
 %        plot(phoutv, Cfacilitateduptake, 'r')
         hold on
@@ -93,13 +104,13 @@ for m = 1
 %     %plot(phvout, Hleak, '--b')
 %     plot(phoutv, Cleak_csome, '-.r')
 % %     plot(phoutv, log(Cconversion+Cleak+Cleak_csome), 'k')
+    
+    
+    end
     xlabel('external pH')
     ylabel('CO_2 and HCO_3^- fluxes [picomoles/s]')
     hleg = legend('CO_2 to HCO_3^- conversion flux','HCO_3^- active transport flux ', 'Location', 'Best');
     legend('boxoff')
-    
-    
-    
     
 end
 

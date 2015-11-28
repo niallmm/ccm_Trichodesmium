@@ -5,7 +5,7 @@ classdef CCMParams
     % Mutable properties that may depend on the model context.
     properties
         jc = 0.6;        % active uptake rate of HCO3- (cm/s)
-        kcC = 1e-4;        % permeability of carboxysome to CO2 (cm/s)
+        kcC = 1e-4;      % permeability of carboxysome to CO2 (cm/s)
         kcH = 1e-4;      % permeability of carboxysome to HCO3- cm/s
         Rc = 5e-6;       % radius of c-some (cm)
         Rb = 5e-5;       % radius of cell (cm)
@@ -13,37 +13,34 @@ classdef CCMParams
         
         kmC = 0.3;       % cm/s permiability of outer membrane to CO2
         alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
-        Cout = 15;          % microM from Henry's law.
+        Cout = 15;       % microM from Henry's law.
         
         % values at pH 7.8 -- will be used to re-scale pH dependence in
         % function
         % kRub, Km_8, KO, Ssat are all for Synechococcus 6301 from Savir
-        kRub = 11.6;           % rxns/s maximum reaction rate at single active site
-        NRub = 2000;         % number of RuBisCO active sites
-        Km7_8 = 340;            % half max reaction rate of RuBisCO, uM
-        KO7_8 = 972;           % uM
-        O = 300;             % uM, calculated from ambient O2
-        S_sat = 43;          % Specificity ratio when RuBisCO is saturated
+        kRub = 11.6;     % rxns/s maximum reaction rate at single active site
+        NRub = 2000;     % number of RuBisCO active sites
+        Km7_8 = 340;     % half max reaction rate of RuBisCO, uM
+        KO7_8 = 972;     % uM
+        O = 300;         % uM, calculated from ambient O2
+        S_sat = 43;      % Specificity ratio when RuBisCO is saturated
         
         kCAH = 4.6e4;    % maximum rate of bicarbonate dehydration by CA /active site @ pH = 8
-        kCAC = 8e4;          % maximum rate of carbon dioxide hydration by CA /active site
-        NCA = 100;            % number of active sites
-        Kca = 3.2*1e3;       % uM half max reaction rate for carbon dioxide hydration
-        Kba = 9.3*1e3;       % uM half max reaction rate for bicarbonate dehydration
+        kCAC = 8e4;      % maximum rate of carbon dioxide hydration by CA /active site
+        NCA = 100;       % number of active sites
+        Kca = 3.2*1e3;   % uM half max reaction rate for carbon dioxide hydration
+        Kba = 9.3*1e3;   % uM half max reaction rate for bicarbonate dehydration
         
         pH = 8;
-        kmH_base = 3e-3;     % cm/s this is the permeability of the membrane to pure H2CO3
-        h_cyto_exp = 30000;   %uM of inorganic carbon expected in the cytosol
+        kmH_base = 3e-3;      % cm/s this is the permeability of the membrane to pure H2CO3
+        h_cyto_exp = 30000;   % uM of inorganic carbon expected in the cytosol
         
         pH_out = 7;          % extracellular pH, 7 is around freshwater
-        
-        I_out = 0.05;            % ionic strength of solution:
-                                %0.2 is representative of cytosol
-        I_in =  0.2;           %0.05 is representative of freshwater
-        
+        I_out = 0.05;        % ionic strength of solution:
+                             % 0.2 is representative of cytosol
+        I_in =  0.2;         % 0.05 is representative of freshwater
         salt = 0;           % if freshwater (salt =0) we calculate pKas analytically
-                            % if saltwater (salt = 1) we set pKas
-                            % emperically
+                            % if saltwater (salt = 1) we set pKas empirically
         
     end
     
@@ -51,8 +48,9 @@ classdef CCMParams
     % constants.
     properties (Constant)
         Na = 6.022e23;       % Avogadro's number is constant, of course.
-        RT = 2.4788;           % (R = 8.314e-3 kJ/(K*mol))*(298.15 K)
+        RT = 2.4788;         % (R = 8.314e-3 kJ/(K*mol))*(298.15 K)
         
+        % Free energies of formation, charges and proton counts. 
         CO2_delG0 = -623.2;
         CO2_NH = 2;
         CO2_z = 0;
@@ -65,10 +63,10 @@ classdef CCMParams
         CO3_delG0 = -527.8;
         CO3_NH = 0;
         CO3_z = -2;
-        
     end
     
-    properties (Dependent) % volumes and pH dependent RuBisCO reaction rates
+    properties (Dependent)
+        % volumes and pH dependent RuBisCO reaction rates
         Vcell   % volume of cell
         Vcsome  % volume of carboxysome
         SAcell  % surface area of the cell
@@ -77,23 +75,25 @@ classdef CCMParams
         % co-localized to the carboxysome.
         VmaxCsome    % uM/s RuBisCO max reaction rate/concentration
         VmaxCsome_pH8 % uM/s RuBisCO max reaction rate/concentration at pH 8
+        
         % needed to calculate the oxygen reaction rate
         VbaCsome     % maximum rate of bicarbonate dehydration by CA
         VcaCsome     % maximum rate of carbon dioxide hydration by CA
         
         % Dependent paramters for the case that CA & RuBisCO are uniformly
         % distributed through the cytoplasm.
-        VmaxCell    % uM/s RuBisCO max reaction rate/concentration
+        VmaxCell     % uM/s RuBisCO max reaction rate/concentration
         VmaxCell_pH8 %uM/s RuBisCO max reaction rate/concentration at pH 8
-        VbaCell     % maximum rate of bicarbonate dehydration by CA
-        VcaCell     % maximum rate of carbon dioxide hydration by CA
+        VbaCell      % maximum rate of bicarbonate dehydration by CA
+        VcaCell      % maximum rate of carbon dioxide hydration by CA
         
         kRub_pH     % pH dependent RuBisCO reaction rate/s at single reaction site
-        Km    % pH dependent RuBisCO 1/2 max concentration
+        Km          % pH dependent RuBisCO 1/2 max concentration
         KO          % pH dependent RuBisCO 1/2 max concentration for oxygen,
-        % interpreted from pH dependence of Km
+                    % interpreted from pH dependence of Km
     end
-    methods %calculating reaction volumes and pH dependent RuBisCOreaction rates
+    methods
+        % calculating reaction volumes and pH dependent RuBisCOreaction rates
         function value = get.Vcell(obj)
             value = 4*pi*obj.Rb^3/3;
         end
