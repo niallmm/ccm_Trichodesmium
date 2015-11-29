@@ -39,6 +39,7 @@ classdef CCMParams
         I_out = 0.05;        % ionic strength of solution:
                              % 0.2 is representative of cytosol
         I_in =  0.2;         % 0.05 is representative of freshwater
+
         salt = 0;           % if freshwater (salt =0) we calculate pKas analytically
                             % if saltwater (salt = 1) we set pKas empirically
         
