@@ -19,11 +19,12 @@ cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
 
 
 % use the oxygenations and carboxylation rates calculated in the analytic
-% and model executor files (calc_Carbonfate_vs_pH.m calls them)
+% and model execut`or files (calc_Carbonfate_vs_pH.m calls them)
 frac_oxygenation_ccm = OratewC./CratewO;
 
 % Cost of 2PG recovery on a per-fixation basis in each case.
-cost_2pg_ccm_h = cost_per_2pg * frac_oxygenation_ccm;
+% cost_2pg_ccm_h2 = cost_per_2pg * frac_oxygenation_ccm;
+cost_2pg_ccm_h = fixAndRecover_ProtonCost(CratewO, OratewC)-cost_fixation;
 
 % Total cost of the system in H+/fixation for each case.
 total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 1);
@@ -48,7 +49,7 @@ text(6, 5e2, 'HCO3^- transport cost', 'Color', 'r')
 plot([pH(1) pH(end)], [cost_fixation cost_fixation], '--b');
 text(3, 20, 'Calvin Cycle Fixation', 'Color', 'b');
 % plot cost of photorespiration
-semilogy(pH, cost_2pg_ccm_h, 'Color','k', 'LineWidth', 3);
+semilogy(pH, cost_2pg_ccm_h, 'Color','y', 'LineWidth', 3);
 text(6, 1, 'Cost of photorespiration', 'Color', 'k')
 %plot cost of pH maintenance and transport
 semilogy(pH, cost_h +cost_pH_maintenance, '--c', 'LineWidth',3)

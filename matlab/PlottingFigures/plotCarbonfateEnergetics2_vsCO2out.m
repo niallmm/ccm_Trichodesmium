@@ -35,8 +35,8 @@ hold on
 loglog(CO2extv, max_carb_flux, '--k');
 loglog(CO2extv, CratewO_just_c3_rbc, 'g');
 loglog(CO2extv, CratewO_just_specific_rbc, 'b');
-loglog(CO2extv, ones(length(CO2extv)) * 5e-9, 'c');
-loglog(CO2extv, ones(length(CO2extv)) * 1.5e-8, '--c');
+loglog(CO2extv, ones(size(CO2extv)) * 5e-9, 'c');
+loglog(CO2extv, ones(size(CO2extv)) * 1.5e-8, '--c');
 plot([15 15], [1e-12 1e-7], '--m');
 axis([min(CO2extv) max(CO2extv) 1e-12 1e-7]);
 xlabel('External CO_2 concentration (\muM)')
@@ -73,9 +73,11 @@ figure(111);
 plot(CO2extv, total_cost_just_c3_rbc_h, 'g');
 hold on
 plot(CO2extv, total_cost_just_specific_rbc_h, 'b');
-fill([CO2extv fliplr(CO2extv)], ...
-     [max_total_ccm_cost fliplr(min_total_ccm_cost)], 'm', ...
-     'FaceAlpha', 0.3);
+plot(CO2extv, max_total_ccm_cost, 'r')
+plot(CO2extv, min_total_ccm_cost, 'r')
+% fill([CO2extv fliplr(CO2extv)], ...
+%      [max_total_ccm_cost fliplr(min_total_ccm_cost)], 'm', ...
+%      'FaceAlpha', 0.3);
 plot([15 15], [10 500], '--m');
 axis([0.1 100 10 500]);
 set(gca, 'xscale', 'log');
@@ -83,7 +85,7 @@ set(gca, 'yscale', 'log');
 xlabel('External CO_2 concentration (\muM)');
 ylabel('Energetic Cost H^+ / (CO_2 fixed)');
 title('Total cost of fixation with CCM vs selective RuBisCO');
-legend('C3 RuBisCO alone', 'Specific RuBisCO alone', 'Full CCM Range', ...
+legend('C3 RuBisCO alone', 'Specific RuBisCO alone', 'max CCM', 'min CCM', ...
     'Atmospheric CO_2');
 legend('boxoff');
 

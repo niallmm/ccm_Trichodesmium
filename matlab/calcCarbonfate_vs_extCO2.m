@@ -41,7 +41,7 @@ ccm_params_low_pH.pH = 7.3;  % cytosolic pH measured in dark
 params_just_c3_rbc.pH = 8.3;
 params_just_specific_rbc.pH = 8.3;
 
-Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
+Hmax = 10000;   % Maximum cytoplasmic bicarbonate conc. in uM
 kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
 ccm_params.kcH = kc_opt;
 ccm_params.kcC = kc_opt;
