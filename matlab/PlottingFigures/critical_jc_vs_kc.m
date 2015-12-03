@@ -20,10 +20,10 @@ res = exec.RunAnalytical();
 
 % Critical jc where CA 'becomes saturated'        
 
-% Ccrit = res.CCAsat0;
-% critjc(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
-%             p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2))./...
-%            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
+Ccrit = res.CCAsat0;
+critjc(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
+            p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2))./...
+           (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % critical jc were Rubisco is saturated
 Ccrit = p.Km;
@@ -45,23 +45,23 @@ critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- 
 %            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % calculate jc where Hcyto = 30mM
-%     Hmax = 30000; %uM
-%     jc_Hmax(i) = p.CalcOptimalJc(Hmax);
+    Hmax = 30000; %uM
+    jc_Hmax(i) = p.CalcOptimalJc(Hmax);
 end
 figure(6)        
-% loglog(critjc*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-k')
+loglog(critjc*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-k')
 hold on
-plot(critjcRub*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-r')
+loglog(critjcRub*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-r')
 %plot(critjcRub99*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-c')
-% loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e6, kvec, '--k')
+loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e6, kvec, '--k')
 xlabel('Active HCO_3^- transport, j_c*H_{out}, (picomole/s)')
 ylabel('Carboxysome permeability')
 
 figure(116)
-% loglog(critjc, kvec, '-k')
+loglog(critjc, kvec, '-k')
 hold on
-plot(critjcRub, kvec, '-r')
-% loglog(jc_Hmax, kvec, '--k')
+loglog(critjcRub, kvec, '-r')
+loglog(jc_Hmax, kvec, '--k')
 %plot(critjcRub99, kvec, '-c')
 
 xlabel('Active HCO_3^- transport, j_c, cm/s)')
