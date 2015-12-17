@@ -40,7 +40,7 @@ classdef CCMModelNumExecutor
             %==========================================================================
             
             options = odeset('RelTol',p.reltol, 'AbsTol', p.abstol);
-=
+
             [t, u]=ode15s(@spherediffssnondim, p.time, p.u0, options, p);
             [fintime, junk] = size(t);
             %==========================================================================

@@ -1,7 +1,7 @@
 
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
-p.pH = 7.8;
+p.pH = 8;
 
 
 exec = FullCCMModelExecutor(p);
@@ -46,6 +46,7 @@ critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- 
         
 % calculate jc where Hcyto = 30mM
     Hmax = 30000; %uM
+    p.kcC
     jc_Hmax(i) = p.CalcOptimalJc(Hmax);
 end
 figure(6)        
