@@ -50,11 +50,11 @@ critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- 
     jc_Hmax(i) = p.CalcOptimalJc(Hmax);
 end
 figure(6)        
-loglog(critjc*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-k')
+loglog(critjc*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-k')
 hold on
-loglog(critjcRub*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-r')
+loglog(critjcRub*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-r')
 %plot(critjcRub99*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-c')
-loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e6, kvec, '--k')
+loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e3, kvec, '--k')
 xlabel('Active HCO_3^- transport, j_c*H_{out}, (picomole/s)')
 ylabel('Carboxysome permeability')
 
