@@ -9,8 +9,8 @@ function total_cost_h = totalProtonCost_CCM(Hin, CratewO, ...
     % membrane, then this doesn't make sense. The cost of transport should
     % go up as the extracellular concentration of CO2 goes down. 
     cost_h = BicarbonateUptakeCost * Hin./CratewO;
-    cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
+    cost_pH_maintenance = (BicarbonateUptakeCost *Hin - OHrateCA)./CratewO;
     
-    total_cost_h = cost_fix_and_recover + cost_h + cost_pH_maintenance;
+    total_cost_h = cost_fix_and_recover + cost_pH_maintenance;
 end
 

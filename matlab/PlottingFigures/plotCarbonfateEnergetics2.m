@@ -34,7 +34,7 @@ total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 1);
 % =========================================================================
 % Plot cost of transport, CCB cycle and photorespiration per carbon fixation
 % =========================================================================
-figure(2)
+figure(1)
 % for model with full CCM
 
 
@@ -52,7 +52,7 @@ text(3, 20, 'Calvin Cycle Fixation', 'Color', 'b');
 semilogy(pH, cost_2pg_ccm_h, 'Color','y', 'LineWidth', 3);
 text(6, 1, 'Cost of photorespiration', 'Color', 'k')
 %plot cost of pH maintenance and transport
-semilogy(pH, cost_h +cost_pH_maintenance, '--c', 'LineWidth',3)
+semilogy(pH, cost_pH_maintenance, '--c', 'LineWidth',3)
 % total cost
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 title('Full CCM')
