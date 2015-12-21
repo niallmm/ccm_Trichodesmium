@@ -68,7 +68,7 @@ ylabel('Oxygenations/Carboxylations')
 legend('CCM', 'C3 RuBisCO alone', 'Specific RuBisCO alone');
 
 % Total cost a function of CO2.
-figure(111);
+figure(1);
 
 plot(CO2extv, total_cost_just_c3_rbc_h, 'g');
 hold on
