@@ -42,7 +42,7 @@ params_just_c3_rbc.pH = 8.3;
 params_just_specific_rbc.pH = 8.3;
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
-kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.
+kc_opt = 3e-5;  % optimal carboxysome permeability from jc kc plot at pH=8.
 ccm_params.kcH = kc_opt;
 ccm_params.kcC = kc_opt;
 ccm_params_low_pH.kcH = kc_opt;
