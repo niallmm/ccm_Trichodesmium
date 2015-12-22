@@ -18,8 +18,8 @@ ccm_params.pH_out = 7;
 % we start the pH sweep below 6 is that the original model was using an
 % implied pH of ~= 4 (calculated from the bicarbonate permeability used).
 % pH = linspace(4, 8.3, 40);
-pH = linspace(6,8.3,40);
-kmH = zeros(30);
+pH = linspace(6,8.9,1e3);
+kmH = zeros(1e3);
 
 Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
 kc_opt = 1e-4;  % optimal carboxysome permeability from previous work.

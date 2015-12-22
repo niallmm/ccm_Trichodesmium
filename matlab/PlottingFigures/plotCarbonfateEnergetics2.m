@@ -57,5 +57,10 @@ semilogy(pH, cost_pH_maintenance, '--c', 'LineWidth',3)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 title('Full CCM')
 % 
-
+line([8.39 8.39],[0.01 1e3])
+line([7.33 7.33],[0.01 1e3])
+line([8.28 8.28],[0.01 1e3])
+line([8.49 8.49],[0.01, 1e3])
+line([7.17 7.17], [0.01, 1e3])
+line([7.49 7.49],[0.01, 1e3])
 
