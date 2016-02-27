@@ -1,18 +1,17 @@
 
-addpath('/Users/niallmangan/GitHub/ccm/matlab')
-p = CCMParams_Csome;
-p.pH = 8;
+% define p = CCMParams_Csome; in external script.
 
 
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
        
         
-kvec = logspace(-9,2, 1e3);
+kvec = logspace(-9,2, 2e2);
+
 
 for i = 1:length(kvec)
     p.kcC = kvec(i);
-    p.kcH = p.kcC;
+    p.kcH = ratio*p.kcC;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
 
@@ -44,26 +43,29 @@ critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- 
 %             p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2))./...
 %            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
-% calculate jc where Hcyto = 30mM
-    Hmax = 30000; %uM
+% calculate jc where Hcyto is defined in external script
+%     Hmax = 30000; %uM
     p.kcC
     jc_Hmax(i) = p.CalcOptimalJc(Hmax);
+    
+
+    
 end
-figure(6)        
-loglog(critjc*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-k')
-hold on
-loglog(critjcRub*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-r')
-%plot(critjcRub99*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-c')
-loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e3, kvec, '--k')
-xlabel('Active HCO_3^- transport, j_c*H_{out}, (picomole/s)')
-ylabel('Carboxysome permeability')
-
-figure(116)
-loglog(critjc, kvec, '-k')
-hold on
-loglog(critjcRub, kvec, '-r')
-loglog(jc_Hmax, kvec, '--k')
-%plot(critjcRub99, kvec, '-c')
-
-xlabel('Active HCO_3^- transport, j_c, cm/s)')
-ylabel('Carboxysome permeability')
+% figure(6)        
+% loglog(critjc*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-k')
+% hold on
+% loglog(critjcRub*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-r')
+% %plot(critjcRub99*p.Hout*4*pi*p.Rb^2*1e6, kvec, '-c')
+% loglog(jc_Hmax*p.Hout*4*pi*p.Rb^2*1e3, kvec, '--k')
+% xlabel('Active HCO_3^- transport, j_c*H_{out}, (picomole/s)')
+% ylabel('Carboxysome permeability')
+% 
+% figure(116)
+% loglog(critjc, kvec, '-k')
+% hold on
+% loglog(critjcRub, kvec, '-r')
+% loglog(jc_Hmax, kvec, '--k')
+% %plot(critjcRub99, kvec, '-c')
+% 
+% xlabel('Active HCO_3^- transport, j_c, cm/s)')
+% ylabel('Carboxysome permeability')
