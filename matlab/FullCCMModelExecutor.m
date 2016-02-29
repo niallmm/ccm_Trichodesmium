@@ -12,6 +12,10 @@ classdef FullCCMModelExecutor %  < CCMModelExector
             p = obj.ccm_params;
             result = FullCCMAnalyticalSolution(p);
         end
+        
+        function resultN = CCMModelNumExecutor(obj)
+            resultN = CCMModelNumExecutor(obj.ccm_params);
+        end
     end
     
 end

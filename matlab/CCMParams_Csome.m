@@ -36,9 +36,7 @@ classdef CCMParams_Csome < CCMParams
             Hcytop = @(jc) calcHcytoDiff_Csome(jc, p, Hmax);
             % Silence warnings for fzero
             % This prevents the CA non-saturations warning from printing
-            % for every iteration inside fzero. TODO: should we be
-            % concerned that the lack of CA saturation at some points
-            % during the optimization is affecting the optima? 
+            % for every iteration inside fzero.
             warning('off', 'all');
             jc = fzero(Hcytop, 1e-2);
             warning('on', 'all');
@@ -76,17 +74,17 @@ classdef CCMParams_Csome < CCMParams
             value = -(obj.alpha+ obj.kmC)/(obj.Rc*((obj.kmC+obj.alpha)*obj.GC + obj.D/obj.Rb^2));
         end
         function value = get.beta_c2(obj)
-            value = -obj.alpha*((obj.alpha+ obj.kmC)*obj.G/((obj.alpha+obj.kmC)*obj.GC + obj.D/obj.Rb^2)-1)*obj.Kca/(obj.Kba*obj.Rc)/(obj.kmH*obj.G +obj.D/obj.Rb^2); 
+            value = -obj.alpha*(obj.D/obj.Rb^2)*obj.Kca/(obj.Kba*obj.Rc)/(obj.kmH_in*obj.GH +obj.D/obj.Rb^2)/((obj.alpha+obj.kmC)*obj.GC + obj.D/obj.Rb^2); 
         end
         function value = get.epsilon_c(obj)
             value = -obj.kmC*obj.Cout/(obj.Kca*obj.Rc*((obj.alpha+ obj.kmC)*obj.GC+obj.D/obj.Rb^2));
         end
         function value = get.epsilon_h(obj)
-            value = -(obj.jc*obj.Hout + obj.kmH*obj.Hout + obj.alpha*obj.kmC*obj.Cout*obj.GC/((obj.alpha+obj.kmC)*obj.GC+obj.D/obj.Rb^2))...
-                    /(obj.Kba*obj.Rc*(obj.kmH*obj.GH+obj.D/obj.Rb^2));
+            value = -(obj.jc*obj.Hout + obj.kmH_out*obj.Hout + obj.alpha*obj.kmC*obj.Cout*obj.GC/((obj.alpha+obj.kmC)*obj.GC+obj.D/obj.Rb^2))...
+                    /(obj.Kba*obj.Rc*(obj.kmH_in*obj.GH+obj.D/obj.Rb^2));
         end
         function value = get.beta_h(obj)
-            value = -obj.kmH/(obj.Rc*(obj.kmH*obj.GH + obj.D/obj.Rb^2));
+            value = -obj.kmH_in/(obj.Rc*(obj.kmH_in*obj.GH + obj.D/obj.Rb^2));
         end
     end
 end

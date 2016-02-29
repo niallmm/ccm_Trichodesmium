@@ -59,9 +59,10 @@ classdef FullCCMAnalyticalSolution
             
 
             obj.N = (p.jc + p.kmH_out)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
-                + p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2);
-            obj.M = (p.kmC + p.alpha)*(1+p.Keq)*p.kmH_in*p.GH + ...
-                p.kmC*(1+(p.kmH_in/p.kmC)*p.Keq)*p.D/p.Rb^2;
+                + p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC+p.D/p.Rb^2);
+            obj.M = p.kmH_in*((p.kmC + p.alpha)*p.GC + p.D/p.Rb^2)...
+                    +p.kmC*(p.kmH_in*p.GH + p.D/p.Rb^2)...
+                    + p.alpha*p.km_in*p.GH;
             obj.P = ((p.alpha + p.kmC)*p.GC + p.D/p.Rb^2).*(p.kmH_in*p.GH + p.D/p.Rb^2);
 
             

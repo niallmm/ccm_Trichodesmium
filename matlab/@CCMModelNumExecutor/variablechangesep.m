@@ -1,4 +1,5 @@
-function [r,h,c] = variablechangesep(x,u)
+function [r,h,c] = variablechangesep(obj,u)
+x = obj.x;
 % now we need to convert u into two vectors h and c
 [times,sizeu] = size(u);
 h = zeros(times, sizeu/2);
