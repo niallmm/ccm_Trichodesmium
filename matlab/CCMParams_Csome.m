@@ -33,6 +33,7 @@ classdef CCMParams_Csome < CCMParams
         
         function jc = CalcOptimalJc(obj, Hmax)
             p = obj;
+            
             Hcytop = @(jc) calcHcytoDiff_Csome(jc, p, Hmax);
             % Silence warnings for fzero
             % This prevents the CA non-saturations warning from printing
@@ -41,7 +42,7 @@ classdef CCMParams_Csome < CCMParams
             jc = fzero(Hcytop, 1e-2);
             warning('on', 'all');
         end
-        
+
         function value = get.Vmax(obj)
             value = obj.VmaxCsome;
         end
@@ -74,7 +75,9 @@ classdef CCMParams_Csome < CCMParams
             value = -(obj.alpha+ obj.kmC)/(obj.Rc*((obj.kmC+obj.alpha)*obj.GC + obj.D/obj.Rb^2));
         end
         function value = get.beta_c2(obj)
-            value = -obj.alpha*(obj.D/obj.Rb^2)*obj.Kca/(obj.Kba*obj.Rc)/(obj.kmH_in*obj.GH +obj.D/obj.Rb^2)/((obj.alpha+obj.kmC)*obj.GC + obj.D/obj.Rb^2); 
+            value = -obj.alpha*(obj.D/obj.Rb^2)*obj.Kca/(obj.Kba*obj.Rc)...
+                /(obj.kmH_in*obj.GH +obj.D/obj.Rb^2)...
+                /((obj.alpha+obj.kmC)*obj.GC + obj.D/obj.Rb^2); 
         end
         function value = get.epsilon_c(obj)
             value = -obj.kmC*obj.Cout/(obj.Kca*obj.Rc*((obj.alpha+ obj.kmC)*obj.GC+obj.D/obj.Rb^2));

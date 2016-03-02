@@ -58,24 +58,24 @@ classdef FullCCMAnalyticalSolution
             p = ccm_params;
             
 
-            obj.N = (p.jc + p.kmH_out)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
-                + p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC+p.D/p.Rb^2);
-            obj.M = p.kmH_in*((p.kmC + p.alpha)*p.GC + p.D/p.Rb^2)...
-                    +p.kmC*(p.kmH_in*p.GH + p.D/p.Rb^2)...
-                    + p.alpha*p.km_in*p.GH;
+           obj.N = (p.jc + p.kmH_out)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
+               + p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC+p.D/p.Rb^2);
+            obj.M = p.kmH_in*((p.kmC + p.alpha)*p.GC + p.D/p.Rb^2)*p.Keq...
+                   +p.kmC*(p.kmH_in*p.GH + p.D/p.Rb^2)...
+                   + p.alpha*p.kmH_in*p.GH;
             obj.P = ((p.alpha + p.kmC)*p.GC + p.D/p.Rb^2).*(p.kmH_in*p.GH + p.D/p.Rb^2);
 
             
             Ccsomep = 0.5*(obj.N./obj.M - p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) - p.Km) ...
-                + 0.5*sqrt((-obj.N./obj.M + p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) + p.Km).^2 + 4*obj.N*p.Km./obj.M);
+                + 0.5*sqrt((-obj.N./obj.M + p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) + p.Km).^2 + 4*obj.N*p.Km./obj.M)
             Hcsome = Ccsomep*p.Keq;
             
             % saturated CA forward reaction
             
 
-            obj.CCAsat0 = p.Vba*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
-                p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC);
-            
+            CCAsat0 = p.Vba*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
+                p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC)
+            obj.CCAsat0 = CCAsat0;
             HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.GH+p.D/(p.kmH_in*p.Rb^2))/(3*p.D)...
                 +(p.jc+p.kmH_out)*p.Hout/p.kmH_in + p.alpha*p.kmC*p.Cout./(p.kmH_in*((p.alpha + p.kmC)*p.GC+p.D/p.Rb^2)) ...
                 +(p.alpha-(p.alpha*(p.alpha+p.kmC)*p.GC./((p.alpha+p.kmC)*p.GC+p.D/p.Rb^2))).*obj.CCAsat0/p.kmH_in;
@@ -86,7 +86,7 @@ classdef FullCCMAnalyticalSolution
             if  Ccsomep > obj.CCAsat0 || (abs(diff)/(Ccsomep+obj.CCAsat0) <1e-3)
                 obj.c_csome_uM = obj.CCAsat0;
                 obj.h_csome_uM = HCAsat0;
-                warning('Carbonic anhydrase is unsaturated, so if you are trying to use the pH dependence this is bad')
+                warning('Carbonic anhydrase is saturated, so if you are trying to use the pH dependence this is bad')
 %                 csat = 1
             elseif Ccsomep<obj.CCAsat0
                 obj.c_csome_uM = Ccsomep;
@@ -101,7 +101,7 @@ classdef FullCCMAnalyticalSolution
            obj.h_cyto_uM = ((p.jc+p.kmH_out)*p.Hout + p.alpha*obj.c_cyto_uM - ...
                p.kmH_in*obj.h_csome_uM)*p.GH/(p.kmH_in*p.GH + p.D/p.Rb^2)+obj.h_csome_uM;
            % concentration across the cell
-           obj.r = linspace(p.Rc, p.Rb, 100);
+           obj.r = linspace(p.Rc, p.Rb, 10);
            
            obj.c_cyto_rad_uM = (p.kmC*p.Cout - (p.alpha+p.kmC)*obj.c_csome_uM)...
                *(p.D/(p.kcC*p.Rc^2) + 1/p.Rc - 1./obj.r)/...

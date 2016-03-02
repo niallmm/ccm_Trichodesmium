@@ -31,7 +31,7 @@ classdef CCMParams_NoCsome < CCMParams
         function jc = CalcOptimalJc(obj, Hmax)
             p = obj;
             HcytopCell = @(jc) calcHcytoDiff_NoCsome(jc, p, Hmax);
-            jc = fzero(HcytopCell, 1e-2);
+            jc = fzero(HcytopCell, 1e-5);
         end
         
         function value = get.Vmax(obj)

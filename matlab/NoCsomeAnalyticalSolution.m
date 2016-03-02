@@ -7,6 +7,8 @@ classdef NoCsomeAnalyticalSolution
         h_cyto_mM;      % mM concentration of total bicarbonate.
         c_cyto_mM;      % mM concentration of co2.
         
+        hdiff;          % difference between h_cyto_uM and experimental h_cyto value
+        
         % =================================================================
         % Calculate CO2 and O2 fixation rates for whole cell
         VO;             % [uM/s] maximum rate of oxygen fixation calculated from the specificity of RuBisCO
@@ -24,6 +26,7 @@ classdef NoCsomeAnalyticalSolution
         Hin_um;            % [um/s]
         Hleak_um;          % [um/s]
         Cleak_um;          % [um/s]
+        
         
         error;             % the proportion of oxygen fixations to total fixation events
     end
@@ -61,18 +64,22 @@ classdef NoCsomeAnalyticalSolution
                 % than the saturated case then CA is saturated
                 obj.c_cyto_uM = CcytoCAsat0;
                 obj.h_cyto_uM = HcytoCAsat0;
-                csat = 1;
+                csat = 1
             elseif CcytoRub<CcytoCAsat0 % if the predicted CO2 concentration
                 % from the unsaturated case is smaller or equal, then CA is not
                 % saturated
                 obj.c_cyto_uM = CcytoRub;
                 obj.h_cyto_uM = HcytoRub;
-                CAunsat =1;
+                CAunsat =1
             end
             
             % convert to mM if we want it
             obj.h_cyto_mM = obj.h_cyto_uM * 1e-3;
             obj.c_cyto_mM = obj.c_cyto_uM * 1e-3;
+            
+            % calculate the difference between the cytosolic H
+            % concentration and the expected concentration
+            obj.hdiff = obj.h_cyto_uM - p.h_cyto_exp;
             
             obj.VO = p.Vmax*p.KO/(p.Km*p.S_sat);
 

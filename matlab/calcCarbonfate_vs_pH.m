@@ -24,9 +24,10 @@ ccm_params.pH_out = 7;
 pH = linspace(6,8.9,1e3);
 kmH = zeros(1e3);
 
-% Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
-% kc_opt = 3e-5;  % optimal carboxysome permeability in kc vs jc space at pH =8
-% alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
+Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
+kc_opt = 3e-5;  % optimal carboxysome permeability in kc vs jc space at pH =8
+alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
+ratio = 1;
 
 % Calculate carbon fate for cells w/ carboxysomes
 for i =  1:length(pH)  

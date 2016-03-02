@@ -15,8 +15,6 @@ for i = 1:length(kvec)
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
 
-
-
 % Critical jc where CA 'becomes saturated'        
 
 Ccrit = res.CCAsat0;
