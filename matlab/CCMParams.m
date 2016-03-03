@@ -314,7 +314,11 @@ classdef CCMParams
         end
         
         function value = get.Keq(obj)
-            value = 10^(-obj.pKa_eff_cyto +obj.pH);
+            if obj.pHoff == 1
+                value = obj.Vca*obj.Kba/(obj.Vba*obj.Kca);
+            else
+                value = 10^(-obj.pKa_eff_cyto +obj.pH);
+            end
         end
         
         function value = get.Hout(obj)

@@ -3,10 +3,10 @@ classdef CCMModelNumExecutor
     % stores and outputs data appropriately.
     properties
         ccm_params;     % CCMParams instance for running the model.
-        xnum = 50; % number of spatial discritizations
+        xnum =100; % number of spatial discritizations
         finaltime = 10000;        % total simulation time
-        abstol = 1e-5;          % error tolerance
-        reltol = 1e-8;
+        abstol = 1e-12;          % error tolerance
+        reltol = 1e-13;
     end
     
     properties (Dependent)
@@ -99,7 +99,7 @@ classdef CCMModelNumExecutor
         
         function result = get.x(obj)
             p = obj.ccm_params;
-            r1 = p.Rc;
+            r1 = 1; % we nondimensionalized by Rc (or Rb for the no Csome case)
             
             %switch to m coordinates
             m1 = (r1^3)/3;
@@ -113,7 +113,7 @@ classdef CCMModelNumExecutor
         
         function result = get.dx(obj)
             p = obj.ccm_params;
-            r1 = p.Rc;
+            r1 = 1; % we nondimensionalized by Rc (or Rb for the no Csome case)
             
             %switch to m coordinates
             m1 = (r1^3)/3;

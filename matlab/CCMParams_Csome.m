@@ -5,7 +5,7 @@ classdef CCMParams_Csome < CCMParams
     
     properties (Dependent)
         % Non-dimensional params
-        % See supplementary material and pdf document NonDimEqns2 for how these
+        % See supplementary material fuand pdf document NonDimEqns2 for how these
         % Formulas contain the cytosol solutions.
         
         xi      % ratio of rate of diffusion across cell to rate of 
@@ -72,7 +72,8 @@ classdef CCMParams_Csome < CCMParams
 %             value = (obj.D/(obj.k*obj.Rc^2) + 1/obj.Rc - 1/obj.Rb);
 %         end
         function value = get.beta_c(obj)
-            value = -(obj.alpha+ obj.kmC)/(obj.Rc*((obj.kmC+obj.alpha)*obj.GC + obj.D/obj.Rb^2));
+            value = -(obj.alpha+ obj.kmC)/(obj.Rc*((obj.kmC+obj.alpha)*obj.GC ...
+                + obj.D/obj.Rb^2));
         end
         function value = get.beta_c2(obj)
             value = -obj.alpha*(obj.D/obj.Rb^2)*obj.Kca/(obj.Kba*obj.Rc)...
@@ -80,11 +81,14 @@ classdef CCMParams_Csome < CCMParams
                 /((obj.alpha+obj.kmC)*obj.GC + obj.D/obj.Rb^2); 
         end
         function value = get.epsilon_c(obj)
-            value = -obj.kmC*obj.Cout/(obj.Kca*obj.Rc*((obj.alpha+ obj.kmC)*obj.GC+obj.D/obj.Rb^2));
+            value = -obj.kmC*obj.Cout/(obj.Kca*obj.Rc*((obj.alpha+ obj.kmC)*obj.GC...
+                +obj.D/obj.Rb^2));
         end
         function value = get.epsilon_h(obj)
-            value = -(obj.jc*obj.Hout + obj.kmH_out*obj.Hout + obj.alpha*obj.kmC*obj.Cout*obj.GC/((obj.alpha+obj.kmC)*obj.GC+obj.D/obj.Rb^2))...
-                    /(obj.Kba*obj.Rc*(obj.kmH_in*obj.GH+obj.D/obj.Rb^2));
+            value = -(1/(obj.Kba*obj.Rc))*((obj.jc+obj.kmH_out)*obj.Hout ...
+                + obj.alpha*obj.kmC*obj.Cout*obj.GC...
+                /((obj.alpha+obj.kmC)*obj.GC+obj.D/obj.Rb^2))...
+                    /(obj.kmH_in*obj.GH+obj.D/obj.Rb^2);
         end
         function value = get.beta_h(obj)
             value = -obj.kmH_in/(obj.Rc*(obj.kmH_in*obj.GH + obj.D/obj.Rb^2));

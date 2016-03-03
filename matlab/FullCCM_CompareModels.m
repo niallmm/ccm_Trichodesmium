@@ -4,15 +4,18 @@
 %==========================================================================
 clear all
 close all
-kcvec = logspace(-8, -1);
+kcvec = logspace(-8, -1,10);
 for ii = 1:length(kcvec)
 % parameters for calculation.
 p = CCMParams_Csome();
 p.pHoff = 1;
 p.kcC = kcvec(ii);
 p.kcH = kcvec(ii);
-p.pH = 6.815;
-p.jc = 1e-5;
+p.pH = 8;
+p.pH_out = 8;
+
+p.jc = 1e-4;
+
 % % Optimal jc for the no csome case using analytic solution
 % Hmax = 30000; % 30 mM in uM
 % jc_opt= p.CalcOptimalJc(Hmax); 
@@ -34,6 +37,7 @@ h_cyto_mMa = ana_res.h_cyto_rad_uM*1e-3;
 c_cyto_mMa = ana_res.c_cyto_rad_uM*1e-3;
 h_csome_mMa(ii) = ana_res.h_csome_mM;
 c_csome_mMa(ii) = ana_res.c_csome_mM;
+c_csome_sat(ii) = ana_res.CCAsat0*1e-3;
 
 end
 

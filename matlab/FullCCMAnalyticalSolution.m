@@ -87,11 +87,11 @@ classdef FullCCMAnalyticalSolution
                 obj.c_csome_uM = obj.CCAsat0;
                 obj.h_csome_uM = HCAsat0;
                 warning('Carbonic anhydrase is saturated, so if you are trying to use the pH dependence this is bad')
-%                 csat = 1
+                csat = 1
             elseif Ccsomep<obj.CCAsat0
                 obj.c_csome_uM = Ccsomep;
                 obj.h_csome_uM = Hcsome;
-%                 CAunsat =1
+                CAunsat =1
             end
             
             % concentration in the cytosol at r = Rb
