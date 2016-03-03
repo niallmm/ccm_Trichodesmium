@@ -57,6 +57,12 @@ classdef FullCCMAnalyticalSolution
             % Calculate analytic solutions
             p = ccm_params;
             
+            p.kcC
+            p.kcH
+            
+            p.kmH_in*p.GH
+            
+            p.D/p.Rb^2
 
            obj.N = (p.jc + p.kmH_out)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
                + p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC+p.D/p.Rb^2);

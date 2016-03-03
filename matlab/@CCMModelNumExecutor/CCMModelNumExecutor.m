@@ -3,7 +3,7 @@ classdef CCMModelNumExecutor
     % stores and outputs data appropriately.
     properties
         ccm_params;     % CCMParams instance for running the model.
-        xnum =100; % number of spatial discritizations
+        xnum =1000; % number of spatial discritizations
         finaltime = 10000;        % total simulation time
         abstol = 1e-12;          % error tolerance
         reltol = 1e-13;

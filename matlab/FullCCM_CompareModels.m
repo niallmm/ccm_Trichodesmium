@@ -4,7 +4,7 @@
 %==========================================================================
 clear all
 close all
-kcvec = logspace(-8, -1,10);
+kcvec = logspace(-8, -5,4);
 for ii = 1:length(kcvec)
 % parameters for calculation.
 p = CCMParams_Csome();
