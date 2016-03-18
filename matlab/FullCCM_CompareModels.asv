@@ -4,32 +4,32 @@
 %==========================================================================
 clear all
 %  close all
- kcvec =logspace(-12,1,20);
-%  jcvec = logspace(-6,1, 20);
-%  jcvec= 1e-4;
+%  kcvec =logspace(-9,2 ,30);
+ jcvec = logspace(-6,1, 20);
  
-for ii = 1:length(kcvec)
-% for ii = 1:length(jcvec)
+ 
+% for ii = 1:length(kcvec)
+for ii = 1:length(jcvec)
 % parameters for calculation.
 p = CCMParams_Csome();
 p.pHoff = 1;
-% p.jc = jcvec(ii);
-p.kcC = kcvec(ii);
-p.kcH = kcvec(ii);
-% p.kcC = 1;
-% p.kcH = 1;
+p.jc = jcvec(ii);
+% p.kcC = kcvec(ii);
+% p.kcH = kcvec(ii);
+p.kcC = 1e-1;
+p.kcH = 1e-1;
 p.pH = 8;
 p.pH_out = 8;
 
-p.jc = 1e-6;
+% p.jc = 1e-5;
 %  p.NCA = 60;
 % p.NCA = 200;
  p.Cout = 15;
  p.I_out = p.I_in;
 %    p.Cout = 0.24;
+   p.Km7_8 = 2000;
 
-
-p.alpha = 1e-5;
+% p.alpha = 1e-5;
 %  p.Rc = 1e-6;
 
 
@@ -61,24 +61,24 @@ c_csome_sat(ii) = ana_res.CCAsat0*1e-3;
 c_nondim(ii) = p.Kca*(p.kappa*p.epsilon_h+p.epsilon_c+p.Vmax*p.Rc^2/p.Kca/3/p.D)./(p.beta_h*p.kappa*p.gamma + p.beta_c)*1e-3;
 
 end
-% figure(1)
-% loglog(jcvec, c_csome_mMa, 'r')
-% hold on
-% loglog(jcvec, h_csome_mMa, 'b')
-% loglog(jcvec, c_csome_mMn, 'or')
-% loglog(jcvec, h_csome_mMn, 'ob')
-% loglog(jcvec, c_nondim, '--k')
-% xlabel('HCO_3^- transport')
-% ylabel('CO_2 and HCO_3^- concentration in mM')
-
 figure(1)
-loglog(kcvec, c_csome_mMa, 'r')
+loglog(jcvec, c_csome_mMa, 'r')
 hold on
-loglog(kcvec, h_csome_mMa, 'b')
-loglog(kcvec, c_csome_mMn, 'or')
-loglog(kcvec, h_csome_mMn, 'ob')
-xlabel('carboxysome permeability')
+loglog(jcvec, h_csome_mMa, 'b')
+loglog(jcvec, c_csome_mMn, 'or')
+loglog(jcvec, h_csome_mMn, 'ob')
+loglog(jcvec, c_nondim, '--k')
+xlabel('HCO_3^- transport')
 ylabel('CO_2 and HCO_3^- concentration in mM')
+% 
+% figure(1)
+% loglog(kcvec, c_csome_mMa, 'r')
+% hold on
+% loglog(kcvec, h_csome_mMa, 'b')
+% loglog(kcvec, c_csome_mMn, 'or')
+% loglog(kcvec, h_csome_mMn, 'ob')
+% xlabel('carboxysome permeability')
+% ylabel('CO_2 and HCO_3^- concentration in mM')
 % 
 % figure(5)
 % semilogy(r_cell, c_cyto_mMn, 'or')

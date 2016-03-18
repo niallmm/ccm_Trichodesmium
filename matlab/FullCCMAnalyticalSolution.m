@@ -57,12 +57,6 @@ classdef FullCCMAnalyticalSolution
             % Calculate analytic solutions
             p = ccm_params;
             
-            p.kcC
-            p.kcH
-            
-            p.kmH_in*p.GH
-            
-            p.D/p.Rb^2
 
            obj.N = (p.jc + p.kmH_out)*p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2) ...
                + p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC+p.D/p.Rb^2);
@@ -73,14 +67,14 @@ classdef FullCCMAnalyticalSolution
 
             
             Ccsomep = 0.5*(obj.N./obj.M - p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) - p.Km) ...
-                + 0.5*sqrt((-obj.N./obj.M + p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) + p.Km).^2 + 4*obj.N*p.Km./obj.M)
+                + 0.5*sqrt((-obj.N./obj.M + p.Rc^3*p.Vmax*obj.P./(3*obj.M*p.D) + p.Km).^2 + 4*obj.N*p.Km./obj.M);
             Hcsome = Ccsomep*p.Keq;
             
             % saturated CA forward reaction
             
 
-            CCAsat0 = p.Vba*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
-                p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC)
+            CCAsat0 = (p.Vba-p.Vmax)*(p.Rc^3)*(p.GC+p.D/((p.alpha+p.kmC)*p.Rb^2))/(3*p.D) + ...
+                p.Vba*(p.Rc^2)/(6*p.D) + p.kmC*p.Cout/(p.alpha+p.kmC);
             obj.CCAsat0 = CCAsat0;
             HCAsat0 = -p.Vba*(p.Rc^2)/p.D -p.Vba*(p.Rc^3)*(p.GH+p.D/(p.kmH_in*p.Rb^2))/(3*p.D)...
                 +(p.jc+p.kmH_out)*p.Hout/p.kmH_in + p.alpha*p.kmC*p.Cout./(p.kmH_in*((p.alpha + p.kmC)*p.GC+p.D/p.Rb^2)) ...
@@ -93,11 +87,11 @@ classdef FullCCMAnalyticalSolution
                 obj.c_csome_uM = obj.CCAsat0;
                 obj.h_csome_uM = HCAsat0;
                 warning('Carbonic anhydrase is saturated, so if you are trying to use the pH dependence this is bad')
-                csat = 1
+                csat = 1;
             elseif Ccsomep<obj.CCAsat0
                 obj.c_csome_uM = Ccsomep;
                 obj.h_csome_uM = Hcsome;
-                CAunsat =1
+                CAunsat =1;
             end
             
             % concentration in the cytosol at r = Rb

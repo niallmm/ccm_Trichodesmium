@@ -6,11 +6,12 @@ exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
        
         
-kvec = logspace(-9,2, 2e2);
+kvec = logspace(-8,1, 20);
+Hmaxvec = [1, 5, 10, 30, 50]*1000;
 
 
-for i = 1:length(kvec)
-    p.kcC = kvec(i);
+for ii = 1:length(kvec)
+    p.kcC = kvec(ii);
     p.kcH = ratio*p.kcC;
 exec = FullCCMModelExecutor(p);
 res = exec.RunAnalytical();
@@ -18,14 +19,14 @@ res = exec.RunAnalytical();
 % Critical jc where CA 'becomes saturated'        
 
 Ccrit = res.CCAsat0;
-critjc(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
-            p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2))./...
+critjc(ii)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
+            p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC +p.D/p.Rb^2))./...
            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % critical jc were Rubisco is saturated
 Ccrit = p.Km;
-critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
-            p.kmC*p.Cout*((p.kmH_in+p.alpha)*p.GH +p.D/p.Rb^2))./...
+critjcRub(ii)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
+            p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC +p.D/p.Rb^2))./...
            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
         
 % % calculate jc where carboxylation is 99% 
@@ -43,8 +44,11 @@ critjcRub(i)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- 
         
 % calculate jc where Hcyto is defined in external script
 %     Hmax = 30000; %uM
+    for jj = 1:length(Hmaxvec)
     p.kcC
-    jc_Hmax(i) = p.CalcOptimalJc(Hmax);
+    Hmax = Hmaxvec(jj);
+    jc_Hmax(ii, jj) = p.CalcOptimalJc(Hmax);
+    end
     
 
     
