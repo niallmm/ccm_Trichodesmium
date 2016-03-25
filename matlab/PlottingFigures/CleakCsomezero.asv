@@ -1,0 +1,6 @@
+function jcCleak0 = CleakCsomezero(p,jc,Srec)
+    p.jc = jc;
+    exec = FullCCMModelExecutor(p);
+    res = exec.RunAnalytical();
+    jcCleak0  = res.Ccsomeleak_pm/res.Cleak_pm-Srec;
+end

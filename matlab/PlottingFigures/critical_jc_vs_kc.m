@@ -2,12 +2,15 @@
 % define p = CCMParams_Csome; in external script.
 
 
-exec = FullCCMModelExecutor(p);
-res = exec.RunAnalytical();
-       
-        
-kvec = logspace(-8,1, 20);
-Hmaxvec = [1, 5, 10, 30, 50]*1000;
+% exec = FullCCMModelExecutor(p);
+% res = exec.RunAnalytical();
+%        
+
+% p = CCMParams_Csome;
+kvec = logspace(-9,1, 100);
+Hmaxvec = [5, 10, 30, 50]*1000;
+%  p.alpha = 5e-5;
+%  ratio = 1;
 
 
 for ii = 1:length(kvec)
@@ -45,14 +48,45 @@ critjcRub(ii)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))-
 % calculate jc where Hcyto is defined in external script
 %     Hmax = 30000; %uM
     for jj = 1:length(Hmaxvec)
-    p.kcC
+    p.kcC;
     Hmax = Hmaxvec(jj);
     jc_Hmax(ii, jj) = p.CalcOptimalJc(Hmax);
     end
     
+    % calculate transition from CO2 recapture to CO2 facilitated uptake
+    jc0 = jc_Hmax(ii,1);
+    critjc_uptake(ii) = fzero(@(jc)Cleakzero(p,jc), jc0);
+    
+%     %calculate the transition where some level of CO2 is recovered by
+%     %scavenging
+%     Srec = 0.9;% percent of CO2 recovered by scavenging
+%     critjc_Srec(ii)= fzero(@(jc)CleakCsomezero(p,jc,Srec), jc0);
+    
+    
+%     Ccrit = p.Cout*((p.alpha+p.kmC)*p.GC*p.Rb^2/p.D + 1 -p.kmC*p.Rb^2/p.D);
+%     
+%     critjc_uptake(ii)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
+%             p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC +p.D/p.Rb^2))./...
+%            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
+%     % calculate CO2 level at which there is 50% scavenging efficiency
+%     Seff = 0.50;
+%     Ccrit = p.Cout*(p.kmC*Seff*((p.alpha+p.kmC)*p.GC + p.D/p.Rb^2)...
+%             - p.kmC*(p.kmC*Seff*p.GC + p.D/p.Rc^2))./ ...
+%             (p.kmC*Seff*((p.alpha+p.kmC)*p.GC+p.D/p.Rb^2)  ...
+%             -(p.alpha+p.kmC)*(p.kmC*Seff*p.GC + p.D/p.Rc^2));
+%     critjc_50S(ii) = (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))- ...
+%             p.kmC*p.Cout*(p.kmH_in*p.GH +p.alpha*p.GC +p.D/p.Rb^2))./...
+%            (p.Hout*((p.kmC+p.alpha)*p.GC + p.D/p.Rb^2)) - p.kmH_out;
+       
+            
+
+        
+    
 
     
 end
+
+
 % figure(6)        
 % loglog(critjc*p.Hout*4*pi*p.Rb^2*1e3, kvec, '-k')
 % hold on

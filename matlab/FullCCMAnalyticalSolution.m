@@ -23,6 +23,10 @@ classdef FullCCMAnalyticalSolution
         OratewC_pm;        % [pmole/s] rate of O2 fication with CO2 accounted for
         OHrate_um;         % [um/s] rate of OH- evolution due to carbonic anyhdrase
         OHrate_pm
+        % CO2 leakage rate out of the carbodxysome
+        Ccsomeleak_um;
+        Ccsomeleak_pm;
+        
         % =================================================================
         % Calculate CO2 and HCO3- flux rates at cell membrane
         % integrated over surface area of cell
@@ -130,6 +134,8 @@ classdef FullCCMAnalyticalSolution
             obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e-3;
             obj.OHrate_um = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e-3;
             obj.OHrate_pm = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e3;
+            obj.Ccsomeleak_um = -p.kcC*(obj.c_csome_uM - obj.c_cyto_rad_uM(1))*(4*pi*p.Rc^2)*1e-3;
+            obj.Ccsomeleak_pm = obj.Ccsomeleak_um*1e6;
             
             obj.Hin_pm = p.jc*p.Hout*p.SAcell*1e3;
             obj.Hleak_pm = (p.kmH_out*p.Hout - p.kmH_in*obj.h_cyto_uM)*p.SAcell*1e3;

@@ -144,17 +144,17 @@ classdef CCMParams
             else
                 rxn = load('pH_Km.mat');
                 KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
-                if (obj.pH > 8.36) || (obj.pH < 6)
+                if (obj.pH > 8.46) || (obj.pH < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
-                    warning('we are extrapolating out to pH 8.9')
+                    warning('we can extrapolate out to pH 8.9')
                 end
-                if (obj.pH > 8.9) || (obj.pH < 6)
+                if (obj.pH > 8.46) || (obj.pH < 6)
                     
                     if (obj.pH <6)
                         value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
                     end
-                    if obj.pH>8.9
-                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 8.9, 'pchip');
+                    if obj.pH>8.46
+                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 8.46, 'pchip');
                     end
                 else
                     value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, obj.pH,'pchip'); % Km was in mM
@@ -171,17 +171,17 @@ classdef CCMParams
             else
                 rxn = load('pH_Km.mat');
                 KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
-                if (obj.pH > 8.36) || (obj.pH < 6)
+                if (obj.pH > 8.5) || (obj.pH < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we are extrapolating out to pH 8.9')
                 end
-                if (obj.pH > 8.9) || (obj.pH < 6)
+                if (obj.pH > 8.5) || (obj.pH < 6)
                     
                     if (obj.pH <6)
                         value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
                     end
-                    if obj.pH>8.9
-                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 8.9, 'pchip');
+                    if obj.pH>8.5
+                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 8.5, 'pchip');
                     end
                 else
                     value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, obj.pH, 'pchip'); % Km was in mM
