@@ -6,11 +6,14 @@
 % res = exec.RunAnalytical();
 %        
 
-% p = CCMParams_Csome;
-kvec = logspace(-9,1, 100);
-Hmaxvec = [5, 10, 30, 50]*1000;
+p = CCMParams_Csome;
+% p.Cout = 200;
+% p.NRub= 1000;
+p.Km7_8 = 169;
+kvec = logspace(-9,1, 200);
+Hmaxvec = [5, 10, 15, 20, 25, 30]*1000;
 %  p.alpha = 5e-5;
-%  ratio = 1;
+  ratio = 1;
 
 
 for ii = 1:length(kvec)
@@ -53,9 +56,9 @@ critjcRub(ii)= (res.M.*Ccrit + p.Vmax*Ccrit.*res.P*p.Rc^3./(3*p.D*(Ccrit+p.Km))-
     jc_Hmax(ii, jj) = p.CalcOptimalJc(Hmax);
     end
     
-    % calculate transition from CO2 recapture to CO2 facilitated uptake
-    jc0 = jc_Hmax(ii,1);
-    critjc_uptake(ii) = fzero(@(jc)Cleakzero(p,jc), jc0);
+%     % calculate transition from CO2 recapture to CO2 facilitated uptake
+%     jc0 = jc_Hmax(ii,1);
+%     critjc_uptake(ii) = fzero(@(jc)Cleakzero(p,jc), jc0);
     
 %     %calculate the transition where some level of CO2 is recovered by
 %     %scavenging

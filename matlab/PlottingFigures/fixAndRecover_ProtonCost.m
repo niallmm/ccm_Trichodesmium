@@ -7,6 +7,6 @@ function total_cost_h = fixAndRecover_ProtonCost(CratewO, OratewC)
     % which may lead to another round of oxygenation etc.
     ratio = OratewC ./ CratewO;
 %     total_cost_h = (32.67 + (49.0 * ratio)) ./ (1.0 - (0.5 * ratio));
-    total_cost_h = (36.67 + (55*ratio))./ (1.0 - (0.5*ratio)); % new number for H+/NADPH from Raven
+    total_cost_h = (36.67 + (56*ratio))./ (1.0 - (0.5*ratio)); % new number for H+/NADPH from Raven
 end
 

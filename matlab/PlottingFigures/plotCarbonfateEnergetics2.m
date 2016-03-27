@@ -7,7 +7,7 @@ all_ones = ones(size(pH));
 cost_fixation = 36.67; % with Raven update
 % cost of photorespiration + CO2 recovery per oxygenation
 % cost_per_2pg = 65.34;
-cost_per_2pg = 73.34; % with Raven update
+cost_per_2pg = 74.34; % with Raven update
 % Cost of transport in the 3 cases (per fixation)
 cost_h = Hin./CratewO;
 

@@ -5,7 +5,8 @@ close all
 % resultsfolder = 'savedoutput/03212016Code/';
 % resultsfolder = 'savedoutput/03192016Code/';
 % resultsfolder = 'savedoutput/03242016Code/';
-resultsfolder = 'savedoutput/03252016Code/';
+% resultsfolder = 'savedoutput/03252016Code/';
+resultsfolder = 'savedoutput/03262016Code/';
 mkdir(resultsfolder)
 addpath('./PlottingFigures')
 
@@ -16,7 +17,7 @@ kmHvec = [3e-4 3e-3 3e-2]; % membrane permeability for H2CO3
 % kcCvec = [3e-2  3e-4 3e-5 3e-6];
 % Hmaxvec = [5 10 30 50]*1000;
 
-alphavec = [0 1e-6 1e-5 1e-4];
+alphavec =  [0 1e-6 1e-5 5e-5 8e-5 1e-4];
 
 p = CCMParams_Csome;
 
@@ -25,7 +26,7 @@ figure
 % for jj =1:length(Rcvec)
     jj = 2;
     p.Rc = Rcvec(jj);
-    for kk = 1%:length(ratiovec)
+    for kk = 1:length(ratiovec)
         ratio = ratiovec(kk);
         for nn =  2 %1:length(kmHvec)
             p.kmH_base = kmHvec(nn);
@@ -34,7 +35,7 @@ figure
 %                  p.kcH = ratio*kcCvec(mm);
 %                  for pp = 3 %1:length(Hmaxvec)
 %                      Hmax = Hmaxvec(pp);
-            for qq = 1:length(alphavec)
+            for qq = 1%:length(alphavec)
                 p.alpha = alphavec(qq);
                     
                     
@@ -57,23 +58,24 @@ figure
 %                     save([savefolder, '/calcCarbonfate_vs_pH'])
                     %                     p.kmH_in
 %                                         load([savefolder, 'jc_vs_kc.mat'])
+%                                         alphavec =  [0 1e-6 1e-5 5e-5 8e-5 1e-4];
 %                     load([savefolder, 'calcCarbonfate_vs_pH'])
 % 
 %                     plot(pH, total_cost_ccm_h, 'o')
 %                     hold on
 %                     xlabel('pH')
 %                     ylabel('H^+/(CO_2 fixation)')
-                    dn = 5;
+                    dn = 3;
                     
                                         figure(119)
                                         loglog(critjc, kvec, 'Color', newcolor(3, dn))
                                         hold on
                                         loglog(critjcRub, kvec, 'Color', newcolor(1, dn))
 
-                                        loglog(jc_Hmax(:,3), kvec, '--','Color', newcolor(2, dn))
-                                        loglog(critjc_uptake, kvec, '.-', 'Color', newcolor(4, dn))
+                                        loglog(jc_Hmax, kvec, '--','Color', newcolor(2, dn))
+%                                         loglog(critjc_uptake, kvec, '.-', 'Color', newcolor(4, dn))
                                         xlabel('Active HCO_3^- transport, j_c, (cm/s)')
-                                        ylabel('Carboxysome permeability, k_c*R_c^2, (cm^3/s)')
+                                        ylabel('Carboxysome permeability, k_c, (cm^3/s)')
                                         drawnow
                                         clear exec res Ccrit critjc critjcRub jcHmax kvec
             end
