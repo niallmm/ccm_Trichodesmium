@@ -29,7 +29,8 @@ frac_oxygenation_ccm = OratewC./CratewO;
 cost_2pg_ccm_h = fixAndRecover_ProtonCost(CratewO, OratewC)-cost_fixation;
 
 % Total cost of the system in H+/fixation for each case.
-total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 1);
+costpertransport = 4;
+total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, costpertransport);
 
 
 %%
