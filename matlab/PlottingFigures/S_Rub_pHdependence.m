@@ -11,7 +11,7 @@ c_num = 2; % number of colors on plot
 
 
 for jj = 1:length(pHvec)
-    p.pH = pHvec(jj);
+    p.pH_csome = pHvec(jj);
     Vmax(jj) = p.kRub_pH;
     Km(jj) = p.Km;
     KO(jj) = p.KO;

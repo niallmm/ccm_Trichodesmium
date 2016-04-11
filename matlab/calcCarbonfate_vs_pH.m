@@ -3,12 +3,12 @@
 
 % Params cell with full CCM.
 % 
-ccm_params = CCMParams_Csome;
+% ccm_params = CCMParams_Csome;
 % 
 % % set external pH
-ccm_params.pH_out = 7;
+% ccm_params.pH_out = 7;
 
-% ccm_params = p;
+ccm_params = p;
 
 
 
@@ -23,22 +23,22 @@ ccm_params.pH_out = 7;
 % RuBisCO pH dependent data has a range of ~6 to 8.3. We extraplolate out
 % to 8.9 at 8.9 the k_cat rate for carboxylation is zero, so extrapolating
 % beyond that point is probably unphysical.
-pH = linspace(6,8.9,100);
-% pH = [7 7.33 7.5 8 8.28 8.5];
+% pH = linspace(6,8.9,100);
+pH = [7 7.33 7.5 8 8.28 8.5];
 kmH = zeros(size(pH));
 
-Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
-kc_opt = 3e-5;  % optimal carboxysome permeability in kc vs jc space at pH =8
-alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
-ratio = 1;
+% Hmax = 30000;   % Maximum cytoplasmic bicarbonate conc. in uM
+% kc_opt = 3e-5;  % optimal carboxysome permeability in kc vs jc space at pH =8
+% alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
+% ratio = 1;
 
 % Calculate carbon fate for cells w/ carboxysomes
 for i =  1:length(pH)  
     ccm_params.pH = pH(i);
-    ccm_params.pH;
-    ccm_params.kcC = kc_opt;
-    ccm_params.kcH = ratio*kc_opt;
-    ccm_params.alpha = alpha;
+%     ccm_params.pH;
+%     ccm_params.kcC = kc_opt;
+%     ccm_params.kcH = ratio*kc_opt;
+%     ccm_params.alpha = alpha;
 %     CCMParams calculates the implied kmH for us.
     kmH(i) = ccm_params.kmH_in; 
     

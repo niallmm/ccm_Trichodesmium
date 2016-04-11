@@ -53,7 +53,7 @@ ccm_params_high_perm.kcC = 1e-2;
 alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 
 
-CO2extv = logspace(-1, 2, 1e3);
+CO2extv = logspace(-1, 2, 1e2);
 
 disp('full ccm');
 % Calculate carbon fate for cells w/ carboxysomes
@@ -133,8 +133,8 @@ for i = 1:length(CO2extv)
     params_just_c3_rbc.Cout = CO2extv(i);
     
     % note: kc meaningless in this case as no cbsome
-    % note: using > 0 NCA for now to avoid some stupid error in underlying
-    % code.
+    % note: using > 0 NCA for now to avoid divide by zero in underlying
+    % code
     
     executor = NoCsomeModelExecutor(params_just_c3_rbc);
     res = executor.RunAnalytical();

@@ -1,14 +1,15 @@
 % Run calcCarbonfate_vs_extCO2.m first to populate the workspace.
 all_ones = ones(size(CO2extv));
 
+costoftransport = 1;
 % Total cost of the system in H+/fixation for each case.
-total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 1);
+total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, costoftransport);
 % Case where ATP is used to transport. 1 ATP = 4 H+ by synthase stoich. 
 total_cost_ccm_atp_xport_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 4);
 total_cost_low_pH_ccm_h = totalProtonCost_CCM(Hin_low_pH, ...
-    CratewO_low_pH, OratewC_low_pH, OHrateCA_low_pH, 1);
+    CratewO_low_pH, OratewC_low_pH, OHrateCA_low_pH, costoftransport);
 total_cost_high_perm_ccm_h = totalProtonCost_CCM(Hin_high_perm, ...
-    CratewO_high_perm, OratewC_high_perm, OHrateCA_high_perm, 1);
+    CratewO_high_perm, OratewC_high_perm, OHrateCA_high_perm, costoftransport);
 
 total_cost_just_c3_rbc_h = fixAndRecover_ProtonCost(CratewO_just_c3_rbc, ...
     OratewC_just_c3_rbc);

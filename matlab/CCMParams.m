@@ -31,7 +31,8 @@ classdef CCMParams
         Kca = 3.2*1e3;   % uM half max reaction rate for carbon dioxide hydration
         Kba = 9.3*1e3;   % uM half max reaction rate for bicarbonate dehydration
         
-        pH = 8;
+        pH = 8;          % pH in cytosol
+        pH_csome = 8;    % pH in csome
         kmH_base = 3e-3;      % cm/s this is the permeability of the membrane to pure H2CO3
         h_cyto_exp = 30000;   % uM of inorganic carbon expected in the cytosol
         
@@ -106,29 +107,29 @@ classdef CCMParams
         end
         function value = get.kRub_pH(obj)
             if obj.pHoff ==1
-                if obj.pH ~=8
+                if obj.pH_csome ~=8
                     warning('pH dependence is turned off but you requested a pH other than 8')
                 end
                 value = 10.4231;
             else
                 rxn = load('pH_Vmax.mat');
                 VmaxpH7_8 = interp1(rxn.pH, rxn.Vmax, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
-                if (obj.pH > 8.36) || (obj.pH < 6)
+                if (obj.pH_csome > 8.36) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we are extrapolating out to pH 8.9')
                 end
-                if (obj.pH > 8.9) || (obj.pH < 6)
+                if (obj.pH_csome > 8.9) || (obj.pH_csome < 6)
                     
-                    if (obj.pH < 6)
+                    if (obj.pH_csome < 6)
                         temp = interp1(rxn.pH, rxn.Vmax, 6, 'pchip'); % find value of Vmax at pH we want from data
                         value = temp*obj.kRub/VmaxpH7_8;
                     end
-                    if (obj.pH>8.9)
+                    if (obj.pH_csome>8.9)
                         temp = interp1(rxn.pH, rxn.Vmax, 8.9, 'pchip');
                         value = temp*obj.kRub/VmaxpH7_8;
                     end
                 else
-                    temp = interp1(rxn.pH, rxn.Vmax, obj.pH, 'pchip'); % find value of Vmax at pH we want from data
+                    temp = interp1(rxn.pH, rxn.Vmax, obj.pH_csome, 'pchip'); % find value of Vmax at pH we want from data
                     value = temp*obj.kRub/VmaxpH7_8; % scale the interpolated value by our known kRub rate at pH 8
                     % need to scale because the data was not in the right units.
                     % now it is scaled to rxns/s per active site
@@ -137,54 +138,54 @@ classdef CCMParams
         end
         function value = get.Km(obj)
             if obj.pHoff ==1
-                if obj.pH ~=8
+                if obj.pH_csome~=8
                     warning('pH dependence is turned off but you requested a pH other than 8')
                 end
                 value = 276.9778;
             else
                 rxn = load('pH_Km.mat');
                 KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
-                if (obj.pH > 8.46) || (obj.pH < 6)
+                if (obj.pH_csome > 8.46) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we can extrapolate out to pH 8.9')
                 end
-                if (obj.pH > 8.46) || (obj.pH < 6)
+                if (obj.pH_csome > 8.9) || (obj.pH_csome < 6)
                     
-                    if (obj.pH <6)
+                    if (obj.pH_csome <6)
                         value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
                     end
-                    if obj.pH>8.46
-                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 8.46, 'pchip');
+                    if obj.pH_csome >8.9
+                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 8.9, 'pchip');
                     end
                 else
-                    value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, obj.pH,'pchip'); % Km was in mM
+                    value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, obj.pH_csome,'pchip'); % Km was in mM
                 end
             end
         end
         
         function value = get.KO(obj)
             if obj.pHoff ==1
-                if obj.pH ~=8
+                if obj.pH_csome ~=8
                     warning('pH dependence is turned off but you requested a pH other than 8')
                 end
                 value = 791.8306;
             else
                 rxn = load('pH_Km.mat');
                 KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
-                if (obj.pH > 8.5) || (obj.pH < 6)
+                if (obj.pH_csome > 8.5) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we are extrapolating out to pH 8.9')
                 end
-                if (obj.pH > 8.5) || (obj.pH < 6)
+                if (obj.pH_csome > 8.9) || (obj.pH_csome < 6)
                     
-                    if (obj.pH <6)
+                    if (obj.pH_csome <6)
                         value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
                     end
-                    if obj.pH>8.5
-                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 8.5, 'pchip');
+                    if obj.pH_csome>8.9
+                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 8.9, 'pchip');
                     end
                 else
-                    value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, obj.pH, 'pchip'); % Km was in mM
+                    value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, obj.pH_csome, 'pchip'); % Km was in mM
                 end
             end
         end
@@ -317,7 +318,7 @@ classdef CCMParams
             if obj.pHoff == 1
                 value = obj.Vca*obj.Kba/(obj.Vba*obj.Kca);
             else
-                value = 10^(-obj.pKa_eff_cyto +obj.pH);
+                value = 10^(-obj.pKa_eff_cyto +obj.pH_csome);
             end
         end
         

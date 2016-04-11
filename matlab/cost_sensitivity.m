@@ -4,12 +4,12 @@ clear all
 close all
 clc
 addpath PlottingFigures
-savefolder = 'savedoutput\03262016Code\small\';
+savefolder = 'savedoutput\04022016Code\sensitivity\';
 mkdir(savefolder)
 
 p = CCMParams_Csome;
 Hmax = 30000;
-
+costpertransport = 4;
 
 
 % baseline
@@ -25,6 +25,36 @@ drawnow
 pH7_3(1) =total_cost_ccm_h(2);
 pH8_3(1) =total_cost_ccm_h(4);
 labels{1} = 'baseline';
+
+% transport cost low
+costpertransport = 2;
+plotCarbonfateEnergetics2
+save([savefolder, '2Hplus'])
+figure(2)
+semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
+hold on
+ylabel('Energetic Cost H^+ / (CO_2 fixed)')
+xlabel('Cytoplasmic pH')
+drawnow
+pH7_3(16) =total_cost_ccm_h(2);
+pH8_3(16) =total_cost_ccm_h(4);
+labels{16} = '2 H+/HCO_3^-';
+
+% transport cost high
+costpertransport = 8;
+plotCarbonfateEnergetics2
+save([savefolder, '8Hplus'])
+figure(2)
+semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
+hold on
+ylabel('Energetic Cost H^+ / (CO_2 fixed)')
+xlabel('Cytoplasmic pH')
+drawnow
+pH7_3(17) =total_cost_ccm_h(2);
+pH8_3(17) =total_cost_ccm_h(4);
+labels{17} = '8 H+/HCO_3^-';
+
+costpertransport = 4;
 
 % Cell membrane to CO2
 clear p
@@ -223,4 +253,7 @@ pH7_3(15) =total_cost_ccm_h(2);
 pH8_3(15) =total_cost_ccm_h(4);
 labels{15} = 'k_c = 0.002 cm/s';
 
-% bar([(pH7_3-pH7_3(1))/pH7_3(1); (pH8_3-pH8_3(1))/pH8_3(1)]'*100)
+figure(11)
+bar([pH7_3; pH8_3]')
+figure(12)
+bar([(pH7_3-pH7_3(1))/pH7_3(1); (pH8_3-pH8_3(1))/pH8_3(1)]'*100)
