@@ -20,8 +20,9 @@ classdef CCMParams
         % kRub, Km_8, KO, Ssat are all for Synechococcus 6301 from Savir
         kRub = 11.6;     % rxns/s maximum reaction rate at single active site
         NRub = 2000;     % number of RuBisCO active sites
-        Km7_8 = 340;     % half max reaction rate of RuBisCO, uM
-        KO7_8 = 972;     % uM
+        pHmeas = 7.8;        
+        Km_meas = 340;     % half max reaction rate of RuBisCO, uM
+        KO_meas = 972;     % uM
         O = 300;         % uM, calculated from ambient O2
         S_sat = 43;      % Specificity ratio when RuBisCO is saturated
         
@@ -113,7 +114,7 @@ classdef CCMParams
                 value = 10.4231;
             else
                 rxn = load('pH_Vmax.mat');
-                VmaxpH7_8 = interp1(rxn.pH, rxn.Vmax, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
+                VmaxpHmeas = interp1(rxn.pH, rxn.Vmax, obj.pHmeas, 'pchip'); % find value of Vmax at pH 8 from data
                 if (obj.pH_csome > 8.36) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we are extrapolating out to pH 8.9')
@@ -122,15 +123,15 @@ classdef CCMParams
                     
                     if (obj.pH_csome < 6)
                         temp = interp1(rxn.pH, rxn.Vmax, 6, 'pchip'); % find value of Vmax at pH we want from data
-                        value = temp*obj.kRub/VmaxpH7_8;
+                        value = temp*obj.kRub/VmaxpHmeas;
                     end
                     if (obj.pH_csome>8.9)
                         temp = interp1(rxn.pH, rxn.Vmax, 8.9, 'pchip');
-                        value = temp*obj.kRub/VmaxpH7_8;
+                        value = temp*obj.kRub/VmaxpHmeas;
                     end
                 else
                     temp = interp1(rxn.pH, rxn.Vmax, obj.pH_csome, 'pchip'); % find value of Vmax at pH we want from data
-                    value = temp*obj.kRub/VmaxpH7_8; % scale the interpolated value by our known kRub rate at pH 8
+                    value = temp*obj.kRub/VmaxpHmeas; % scale the interpolated value by our known kRub rate at pH 8
                     % need to scale because the data was not in the right units.
                     % now it is scaled to rxns/s per active site
                 end
@@ -141,10 +142,10 @@ classdef CCMParams
                 if obj.pH_csome~=8
                     warning('pH dependence is turned off but you requested a pH other than 8')
                 end
-                value = 276.9778;
+                value = 276.9778
             else
                 rxn = load('pH_Km.mat');
-                KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
+                KmpHmeas = interp1(rxn.pH, rxn.Km, obj.pHmeas, 'pchip'); % find value of Vmax at pH 8 from data
                 if (obj.pH_csome > 8.46) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we can extrapolate out to pH 8.9')
@@ -152,13 +153,13 @@ classdef CCMParams
                 if (obj.pH_csome > 8.9) || (obj.pH_csome < 6)
                     
                     if (obj.pH_csome <6)
-                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
+                        value = interp1(rxn.pH, rxn.Km*obj.Km_meas/KmpHmeas, 6, 'pchip'); % Km was in mM
                     end
                     if obj.pH_csome >8.9
-                        value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, 8.9, 'pchip');
+                        value = interp1(rxn.pH, rxn.Km*obj.Km_meas/KmpHmeas, 8.9, 'pchip');
                     end
                 else
-                    value = interp1(rxn.pH, rxn.Km*obj.Km7_8/KmpH7_8, obj.pH_csome,'pchip'); % Km was in mM
+                    value = interp1(rxn.pH, rxn.Km*obj.Km_meas/KmpHmeas, obj.pH_csome,'pchip'); % Km was in mM
                 end
             end
         end
@@ -171,7 +172,7 @@ classdef CCMParams
                 value = 791.8306;
             else
                 rxn = load('pH_Km.mat');
-                KmpH7_8 = interp1(rxn.pH, rxn.Km, 7.8, 'pchip'); % find value of Vmax at pH 8 from data
+                KmpHmeas = interp1(rxn.pH, rxn.Km, obj.pHmeas, 'pchip'); % find value of Vmax at pH 8 from data
                 if (obj.pH_csome > 8.5) || (obj.pH_csome < 6)
                     warning('pH is out of range of experimental RuBisCO measurements (6 to 8.46) but we are extrapolating')
                     warning('we are extrapolating out to pH 8.9')
@@ -179,13 +180,13 @@ classdef CCMParams
                 if (obj.pH_csome > 8.9) || (obj.pH_csome < 6)
                     
                     if (obj.pH_csome <6)
-                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 6, 'pchip'); % Km was in mM
+                        value = interp1(rxn.pH, rxn.Km*obj.KO_meas/KmpHmeas, 6, 'pchip'); % Km was in mM
                     end
                     if obj.pH_csome>8.9
-                        value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, 8.9, 'pchip');
+                        value = interp1(rxn.pH, rxn.Km*obj.KO_meas/KmpHmeas, 8.9, 'pchip');
                     end
                 else
-                    value = interp1(rxn.pH, rxn.Km*obj.KO7_8/KmpH7_8, obj.pH_csome, 'pchip'); % Km was in mM
+                    value = interp1(rxn.pH, rxn.Km*obj.KO_meas/KmpHmeas, obj.pH_csome, 'pchip'); % Km was in mM
                 end
             end
         end
