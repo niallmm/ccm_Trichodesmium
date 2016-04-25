@@ -2,13 +2,9 @@
 clear all
 close all
 
-% resultsfolder = 'savedoutput/03212016Code/';
-% resultsfolder = 'savedoutput/03192016Code/';
-% resultsfolder = 'savedoutput/03242016Code/';
-% resultsfolder = 'savedoutput/03252016Code/';
-resultsfolder = 'savedoutput/03262016Code/';
+resultsfolder = '../savedoutput/03262016Code/';
 mkdir(resultsfolder)
-addpath('./PlottingFigures')
+addpath(fileparts(pwd))
 
 
 Rcvec = 0.5*[2, 10, 20, 40]*1e-6; % 20 nm, 100nm, 200 nm, to 400 nm diameter carboxysomes

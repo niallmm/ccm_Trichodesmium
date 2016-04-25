@@ -1,23 +1,22 @@
 %Run calcCarbonfate_vs_pH.m first
+addpath(fileparts(pwd))
 
 all_ones = ones(size(pH));
 
+% cost of H+ per HCO3- transport
+costpertransport = 4;
+
 % cost of CBB per carboxylation
-% cost_fixation = 32.67;
 cost_fixation = 36.67; % with Raven update
-% cost of photorespiration + CO2 recovery per oxygenation
-% cost_per_2pg = 65.34;
-cost_per_2pg = 74.34; % with Raven update
+
 % Cost of transport in the 3 cases (per fixation)
-cost_h = Hin./CratewO;
-
-
+cost_h = costpertransport*Hin./CratewO;
 
 %Cost of maintaining pH balance with a CCM 
 % - only account for pH maintanence needed from CCM activity
 % -- 1 ATP per HCO3- transported (need to export 1 H+?)
 % -- gain 1 OH group (or loose one H+) from each HCO3- converted to CO2
-cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
+cost_pH_maintenance = (costpertransport*Hin - OHrateCA)./CratewO;
 
 
 % use the oxygenations and carboxylation rates calculated in the analytic
@@ -25,11 +24,9 @@ cost_pH_maintenance = (Hin - OHrateCA)./CratewO;
 frac_oxygenation_ccm = OratewC./CratewO;
 
 % Cost of 2PG recovery on a per-fixation basis in each case.
-% cost_2pg_ccm_h2 = cost_per_2pg * frac_oxygenation_ccm;
 cost_2pg_ccm_h = fixAndRecover_ProtonCost(CratewO, OratewC)-cost_fixation;
 
 % Total cost of the system in H+/fixation for each case.
-% costpertransport = 4;
 total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, costpertransport);
 
 
@@ -43,7 +40,7 @@ figure(1)
 
 % plot cost of transport/CO2 fixation with pH
 semilogy(pH, cost_h,'Color','r', 'LineWidth', 3);
-axis([pH(1) pH(end) 1e-1 2e4])
+axis([pH(1) pH(end) 1e-1 3e3])
 hold on
 ylabel('Energetic Cost H^+ / (CO_2 fixed)')
 xlabel('Cytoplasmic pH')
@@ -60,11 +57,11 @@ semilogy(pH, cost_pH_maintenance, '--c', 'LineWidth',3)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 title('Full CCM')
 % 
-line([8.39 8.39],[0.01 1e3])
-line([7.33 7.33],[0.01 1e3])
-line([8.28 8.28],[0.01 1e3])
-line([8.49 8.49],[0.01, 1e3])
-line([7.17 7.17], [0.01, 1e3])
-line([7.49 7.49],[0.01, 1e3])
+line([8.39 8.39],[0.01 1e4])
+line([7.33 7.33],[0.01 1e4])
+line([8.28 8.28],[0.01 1e4])
+line([8.49 8.49],[0.01, 1e4])
+line([7.17 7.17], [0.01, 1e4])
+line([7.49 7.49],[0.01, 1e4])
 drawnow
 

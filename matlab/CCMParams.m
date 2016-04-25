@@ -20,9 +20,9 @@ classdef CCMParams
         % kRub, Km_8, KO, Ssat are all for Synechococcus 6301 from Savir
         kRub = 11.6;     % rxns/s maximum reaction rate at single active site
         NRub = 2000;     % number of RuBisCO active sites
-        pHmeas = 7.8;        
-        Km_meas = 340;     % half max reaction rate of RuBisCO, uM
-        KO_meas = 972;     % uM
+        pHmeas = 7.8;    % pH at which the RuBisCO parameters were measured
+        Km_meas = 340;   % half max reaction rate of RuBisCO, uM
+        KO_meas = 972;   % uM
         O = 300;         % uM, calculated from ambient O2
         S_sat = 43;      % Specificity ratio when RuBisCO is saturated
         

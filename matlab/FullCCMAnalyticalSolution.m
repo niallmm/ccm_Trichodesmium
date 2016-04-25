@@ -20,9 +20,12 @@ classdef FullCCMAnalyticalSolution
         CratewO_um;        % [um/s] rate of CO2 fixation with oxygen accounted for
         OratewC_um;        % [um/s] rate of O2 fication with CO2 accounted for
         CratewO_pm;        % [pmole/s] rate of CO2 fixation with oxygen accounted for
-        OratewC_pm;        % [pmole/s] rate of O2 fication with CO2 accounted for
+        OratewC_pm;        % [pmole/s] rate of O2 fixation with CO2 accounted for
         OHrate_um;         % [um/s] rate of OH- evolution due to carbonic anyhdrase
-        OHrate_pm
+        OHrate_pm;         % [pm/s]  calculated as net HCO3- across carboxysome
+        OHrate_alt_um;     % [um/s] rate of OH- evolution due to carbonic anhydrase 
+        OHrate_alt_pm;     % [pm/s] calculated using net CO2 across carboxysome
+                            % - CO2 fixation
         % CO2 leakage rate out of the carbodxysome
         Ccsomeleak_um;
         Ccsomeleak_pm;
@@ -134,6 +137,10 @@ classdef FullCCMAnalyticalSolution
             obj.OratewC_um = obj.VO*p.O./(p.O+p.KO*(1+C/p.Km))*p.Vcsome*1e-3;
             obj.OHrate_um = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e-3;
             obj.OHrate_pm = -p.kcH*(obj.h_csome_uM - obj.h_cyto_uM)*(4*pi*p.Rc^2)*1e3;
+            obj.OHrate_alt_um = p.kcC*(obj.c_csome_uM - obj.c_cyto_uM)*(4*pi*p.Rc^2)*1e-3...
+                                    + obj.CratewO_um;
+            obj.OHrate_alt_pm = p.kcC*(obj.c_csome_uM - obj.c_cyto_uM)*(4*pi*p.Rc^2)*1e3 ... 
+                                    + obj.CratewO_pm;
             obj.Ccsomeleak_um = -p.kcC*(obj.c_csome_uM - obj.c_cyto_rad_uM(1))*(4*pi*p.Rc^2)*1e-3;
             obj.Ccsomeleak_pm = obj.Ccsomeleak_um*1e6;
             
