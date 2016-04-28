@@ -1,5 +1,7 @@
 % script to make figure for kcH and kcC varying separately
 % and jc held constant
+% this script calculates the CO2 concentration for single jc and more kcC
+% an kcH values than in paper.
  clear all
  close all
 

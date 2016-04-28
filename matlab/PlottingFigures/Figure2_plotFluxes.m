@@ -1,7 +1,7 @@
 % =========================================================================
 % Plot CO2 and HCO3^- fluxes as a function of pH
 % =========================================================================
-% run calcCarbonfate_vs_pH first. (or plot CarbonFateEnergetics)
+% run calcCarbonfate_vs_pH first. 
     figure
     semilogy(pH, abs(Hin), 'r')
     hold on
