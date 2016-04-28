@@ -4,7 +4,7 @@ clear all
 close all
 clc
 addpath(fileparts(pwd))
-savefolder = '..\savedoutput\04242016Code\sensitivity\';
+savefolder = '..\savedoutput\04272016Code\sensitivity\';
 mkdir(savefolder)
 
 p = CCMParams_Csome;
@@ -14,7 +14,7 @@ costpertransport = 4;
 
 % baseline
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'baseline'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -28,7 +28,7 @@ labels{1} = 'baseline';
 
 % transport cost low
 costpertransport = 2;
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, '2Hplus'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -36,13 +36,13 @@ hold on
 ylabel('Energetic Cost H^+ / (CO_2 fixed)')
 xlabel('Cytoplasmic pH')
 drawnow
-pH7_3(16) =total_cost_ccm_h(2);
-pH8_3(16) =total_cost_ccm_h(4);
-labels{16} = '2 H+/HCO_3^-';
+pH7_3(14) =total_cost_ccm_h(2);
+pH8_3(14) =total_cost_ccm_h(4);
+labels{14} = '2 H+/HCO_3^-';
 
 % transport cost high
 costpertransport = 8;
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, '8Hplus'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -50,9 +50,9 @@ hold on
 ylabel('Energetic Cost H^+ / (CO_2 fixed)')
 xlabel('Cytoplasmic pH')
 drawnow
-pH7_3(17) =total_cost_ccm_h(2);
-pH8_3(17) =total_cost_ccm_h(4);
-labels{17} = '8 H+/HCO_3^-';
+pH7_3(15) =total_cost_ccm_h(2);
+pH8_3(15) =total_cost_ccm_h(4);
+labels{15} = '8 H+/HCO_3^-';
 
 costpertransport = 4;
 
@@ -61,7 +61,7 @@ clear p
 p = CCMParams_Csome;
 p.kmC = 0.03;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kmC0_03'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -74,7 +74,7 @@ clear p
 p = CCMParams_Csome;
 p.kmC = 3;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kmC3'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -90,7 +90,7 @@ p.kmH_base =3e-4;
 p.kcC = 1e-5;
 p.kcH =1e-5;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kmH3e_4kcC1e_5'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
@@ -105,7 +105,7 @@ p.kmH_base = 3e-2;
 p.kcC = 1e-4;
 p.kcH =1e-4;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kmH3e_4kcC1e_4'])
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
@@ -148,38 +148,38 @@ clear p
 p = CCMParams_Csome;
 p.kcH = 10*p.kcC;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'ratio10'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(8) =total_cost_ccm_h(2);
-pH8_3(8) =total_cost_ccm_h(4);
-labels{8} = 'ratio 10 ';
+pH7_3(6) =total_cost_ccm_h(2);
+pH8_3(6) =total_cost_ccm_h(4);
+labels{6} = 'ratio 10 ';
 
 clear p
 p = CCMParams_Csome;
 p.kcH = 100*p.kcC;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'ratio100'])
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
-pH7_3(9) =total_cost_ccm_h(2);
-pH8_3(9) =total_cost_ccm_h(4);
-labels{9} = 'ratio 100 ';
+pH7_3(7) =total_cost_ccm_h(2);
+pH8_3(7) =total_cost_ccm_h(4);
+labels{7} = 'ratio 100 ';
 
 clear p
 p = CCMParams_Csome;
 p.kcH = 1000*p.kcC;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'ratio1000'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(10) =total_cost_ccm_h(2);
-pH8_3(10) =total_cost_ccm_h(4);
-labels{10} = 'ratio 1000 ';
+pH7_3(8) =total_cost_ccm_h(2);
+pH8_3(8) =total_cost_ccm_h(4);
+labels{8} = 'ratio 1000 ';
 
 %cytosolic HCO3- pool
 
@@ -188,40 +188,40 @@ p = CCMParams_Csome;
 % p.h_cyto_exp = 5000;
 Hmax =5000;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'Hcyto5mM'])
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
-pH7_3(11) =total_cost_ccm_h(2);
-pH8_3(11) =total_cost_ccm_h(4);
-labels{11} = 'cytosolic HCO_3^- = 5 mM ';
+pH7_3(9) =total_cost_ccm_h(2);
+pH8_3(9) =total_cost_ccm_h(4);
+labels{9} = 'cytosolic HCO_3^- = 5 mM ';
 
 clear p
 p = CCMParams_Csome;
 % p.h_cyto_exp = 15000;
 Hmax = 15000;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'Hcyto15mM'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(12) =total_cost_ccm_h(2);
-pH8_3(12) =total_cost_ccm_h(4);
-labels{12} =  'cytosolic HCO_3^- = 15 mM ';
+pH7_3(10) =total_cost_ccm_h(2);
+pH8_3(10) =total_cost_ccm_h(4);
+labels{10} =  'cytosolic HCO_3^- = 15 mM ';
 
 clear p
 p = CCMParams_Csome;
 % p.h_cyto_exp = 25000;
 Hmax = 25000;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'Hcyto25mM'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(13) =total_cost_ccm_h(2);
-pH8_3(13) =total_cost_ccm_h(4);
-labels{13} = 'cytosolic HCO_3^- = 25 mM ';
+pH7_3(11) =total_cost_ccm_h(2);
+pH8_3(11) =total_cost_ccm_h(4);
+labels{11} = 'cytosolic HCO_3^- = 25 mM ';
 
 Hmax = 30000;
 % carboxysome permeability away from optimum
@@ -230,31 +230,41 @@ p = CCMParams_Csome;
 p.kcC = 0.02;
 p.kcH = 0.02;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kcCkcH0_02'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(14) =total_cost_ccm_h(2);
-pH8_3(14) =total_cost_ccm_h(4);
-labels{14} = 'k_c = 0.02 cm/s';
+pH7_3(12) =total_cost_ccm_h(2);
+pH8_3(12) =total_cost_ccm_h(4);
+labels{12} = 'k_c = 0.02 cm/s';
 
 clear p
 p = CCMParams_Csome;
 p.kcC = 0.002;
 p.kcH = 0.002;
 calcCarbonfate_vs_pH_sensitivity
-plotCarbonfateEnergetics2
+plotCarbonfateEnergetics2_sensitivity
 save([savefolder, 'kcCkcH0_2'])
 figure(2)
 semilogy(pH, total_cost_ccm_h, 'k', 'Linewidth', 3)
 drawnow
-pH7_3(15) =total_cost_ccm_h(2);
-pH8_3(15) =total_cost_ccm_h(4);
-labels{15} = 'k_c = 0.002 cm/s';
+pH7_3(13) =total_cost_ccm_h(2);
+pH8_3(13) =total_cost_ccm_h(4);
+labels{13} = 'k_c = 0.002 cm/s';
 
-figure(11)
+f11 = figure(11);
 bar([pH7_3; pH8_3]')
-ylabel(
-figure(12)
-bar([(pH7_3-pH7_3(1))/pH7_3(1); (pH8_3-pH8_3(1))/pH8_3(1)]'*100)
+ylabel('cost H^+/ (CO_2 fixation)')
+
+
+f12 = figure(12);
+relpH73 = (pH7_3-pH7_3(1))/pH7_3(1);
+relpH83 = (pH8_3-pH8_3(1))/pH8_3(1);
+bar([relpH73; relpH83]')
+ylabel('% change from baseline')
+
+for ii = 1:length(labels)
+    h = text(0.5,0.5, labels{ii}, 'FontSize', 15, 'BackgroundColor', 'w');
+    set(h, 'rotation', 60);
+end

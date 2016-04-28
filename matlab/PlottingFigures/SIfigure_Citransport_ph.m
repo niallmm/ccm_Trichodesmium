@@ -1,6 +1,6 @@
 
 % Bicarbonate flux vs facilitated uptake  vs scavenging
-
+addpath(fileparts(pwd))
 phoutv = linspace(6, 8.5, 20);
 
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
