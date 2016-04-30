@@ -1,6 +1,6 @@
 % Calculate carbon fate breakdown for varying kmH and plot bicarbonate
 % transport per CO2 fixed
-
+ addpath(fileparts(pwd))
 % Params for 3 cases.
 % 1: cell has full CCM.
 % 2: cell has no CCM and C3 plant RuBisCO
@@ -16,17 +16,19 @@ params_just_specific_rbc = CCMParams_NoCsome;
 % rate, low specificity) and the Goldiera Sulfuraria enzyme (below, low
 % rate and high specificity). Data from Savir et al., 2010.
 params_just_c3_rbc.kRub = 3.4;      % rxns/s maximum reaction rate at single active site
-params_just_c3_rbc.Km7_8 = 10.7;    % half max concentration for CO2, uM
+params_just_c3_rbc.Km_meas = 10.7;    % half max concentration for CO2, uM
 params_just_c3_rbc.S_sat = 82;      % specificity ratio
-params_just_c3_rbc.KO7_8 = 295;     % half max concentration for O2, uM
+params_just_c3_rbc.KO_meas = 295;     % half max concentration for O2, uM
+params_just_c3_rbc.pHmeas = 7.8;
 
 % As a thought experiment, use RuBisCO parameters from Goldiera Sulfuraria
 % which has a much higher specificity to CO2 and much lower KM than the
 % cyanobacterial RuBisCO. Data from Savir et al., 2010.
 params_just_specific_rbc.kRub = 1.2;
-params_just_specific_rbc.Km7_8 = 3.3; 
+params_just_specific_rbc.Km_meas = 3.3; 
 params_just_specific_rbc.S_sat = 166;
-params_just_specific_rbc.KO7_8 = 374;
+params_just_specific_rbc.KO_meas = 374;
+params_just_c3_rbc.pHmeas = 7.8;
 
 % set exeternal pH
 ccm_params.pH_out = 7;
@@ -164,4 +166,4 @@ for i =  1:length(CO2extv)
     Ccyto_just_specific_rbc(i) = res.c_cyto_uM;
     OratewC_just_specific_rbc(i) = res.OratewC_pm;
 end
-
+rmpath(fileparts(pwd))

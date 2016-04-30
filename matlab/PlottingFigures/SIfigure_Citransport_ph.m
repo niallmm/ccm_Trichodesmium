@@ -6,6 +6,7 @@ phoutv = linspace(6, 8.5, 20);
 addpath('/Users/niallmangan/GitHub/ccm/matlab')
 p = CCMParams_Csome;
 p.pH = 8;
+p.pH_csome = 8;
 p.pH_out = 7;
 kopt= 3e-5;
 p.kcH = kopt;

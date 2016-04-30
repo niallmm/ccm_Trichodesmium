@@ -135,11 +135,13 @@ tag = {'-'};
 figure(132)
 loglog(kcHvec, total_cost_ccm_h, [tag{1} 'b'])
 hold on
+plot(kcCvec, total_cost_ccm_c, [tag{1}, 'r'])
 plot(kcHvec, total_cost_ccm_min*ones(size(kcHvec)), '--k')
 xlabel('carboxysome permeability')
 ylabel('Cost of CCM [H^+/(CO_2 fixation)]')
 
 
     legend(    'k_c^C = 3\times10^{-5} cm/s, k_c^H varying',...
+        'k_c^H = 3\times10^{-5} cm/s, k_c^C varying',...
         'CO_2 in equilibrium with HCO_3^-', 'Location', 'southeast')
 legend('boxoff')

@@ -1,11 +1,13 @@
 % Run calcCarbonfate_vs_extCO2.m first to populate the workspace.
 all_ones = ones(size(CO2extv));
 
-costoftransport = 1;
+costoftransport = 4;
 % Total cost of the system in H+/fixation for each case.
 total_cost_ccm_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, costoftransport);
-% Case where ATP is used to transport. 1 ATP = 4 H+ by synthase stoich. 
-total_cost_ccm_atp_xport_h = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 4);
+% low cost transport
+total_cost_ccm_atp_xport_h2 = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 2);
+% high cost transport
+total_cost_ccm_atp_xport_h8 = totalProtonCost_CCM(Hin, CratewO, OratewC, OHrateCA, 8);
 total_cost_low_pH_ccm_h = totalProtonCost_CCM(Hin_low_pH, ...
     CratewO_low_pH, OratewC_low_pH, OHrateCA_low_pH, costoftransport);
 total_cost_high_perm_ccm_h = totalProtonCost_CCM(Hin_high_perm, ...
@@ -17,10 +19,12 @@ total_cost_just_specific_rbc_h = fixAndRecover_ProtonCost(...
     CratewO_just_specific_rbc, OratewC_just_specific_rbc); 
 
 min_total_ccm_cost = bsxfun(@min, total_cost_ccm_h, total_cost_low_pH_ccm_h); 
-min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_ccm_atp_xport_h);
+min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_ccm_atp_xport_h2);
+min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_ccm_atp_xport_h8); 
 min_total_ccm_cost = bsxfun(@min, min_total_ccm_cost, total_cost_high_perm_ccm_h);
 max_total_ccm_cost = bsxfun(@max, total_cost_ccm_h, total_cost_low_pH_ccm_h); 
-max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_ccm_atp_xport_h); 
+max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_ccm_atp_xport_h2);
+max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_ccm_atp_xport_h8); 
 max_total_ccm_cost = bsxfun(@max, max_total_ccm_cost, total_cost_high_perm_ccm_h); 
 
 min_carb_flux = bsxfun(@min, CratewO, CratewO_high_perm); 
