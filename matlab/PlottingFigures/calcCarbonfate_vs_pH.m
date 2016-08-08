@@ -18,7 +18,7 @@ ccm_params = CCMParams_Csome;
 % RuBisCO pH dependent data has a range of ~6 to 8.3. We extraplolate out
 % to 8.9 at 8.9 the k_cat rate for carboxylation is zero, so extrapolating
 % beyond that point is probably unphysical.
-pH = linspace(6,8.9,100);
+pH = linspace(6,8.78,100); % 8.9 causes some problem because it is too far outside the range.  
 
 kmH = zeros(size(pH));
 
@@ -28,7 +28,7 @@ alpha = 0;      % assume no conversion of cytoplasmic CO2 to bicarbonate.
 ratio = 1;      % ratio between carboxysome permeability for CO2 and HCO3-
 
 % Calculate carbon fate for cells w/ carboxysomes
-for i =  1:length(pH)  
+for i =  1: length(pH)
     ccm_params.pH = pH(i);
     ccm_params.pH_csome = pH(i);
 
