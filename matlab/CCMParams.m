@@ -14,6 +14,7 @@ classdef CCMParams
         kmC = 0.3;       % cm/s permiability of outer membrane to CO2
         alpha = 0;       % reaction rate of conversion of CO2 to HCO3- at the cell membrane (cm/s)
         Cout = 15;       % microM from Henry's law.
+        Hout = 1900; 
         
         % values at pH 7.8 -- will be used to re-scale pH dependence in
         % function
@@ -109,7 +110,8 @@ classdef CCMParams
         function value = get.kRub_pH(obj)
             if obj.pHoff ==1
                 if obj.pH_csome ~=8
-                    warning('pH dependence is turned off but you requested a pH other than 8')
+                    obj.pHoff
+                    warning('kRub: pH dependence is turned off but you requested a pH other than 8')
                 end
                 value = 10.4231;
             else
@@ -140,9 +142,10 @@ classdef CCMParams
         function value = get.Km(obj)
             if obj.pHoff ==1
                 if obj.pH_csome~=8
-                    warning('pH dependence is turned off but you requested a pH other than 8')
+                    obj.pHoff
+                    warning('Km: pH dependence is turned off but you requested a pH other than 8')
                 end
-                value = 276.9778
+                value = 276.9778;
             else
                 rxn = load('pH_Km.mat');
                 KmpHmeas = interp1(rxn.pH, rxn.Km, obj.pHmeas, 'pchip'); % find value of Vmax at pH 8 from data
@@ -167,7 +170,8 @@ classdef CCMParams
         function value = get.KO(obj)
             if obj.pHoff ==1
                 if obj.pH_csome ~=8
-                    warning('pH dependence is turned off but you requested a pH other than 8')
+                    obj.pHoff
+                    warning('KO:pH dependence is turned off but you requested a pH other than 8')
                 end
                 value = 791.8306;
             else
@@ -234,7 +238,7 @@ classdef CCMParams
         pKa2_out
         pKa_eff_out
         
-        Hout   % external HCO3- concentration, calculated from
+%         Hout   % external HCO3- concentration, calculated from
         % Cout < ---- now in first properties section (10 uM from Henry's
         % law)
         
@@ -292,7 +296,8 @@ classdef CCMParams
             if obj.salt == 0
                 value = (obj.delG0I_HCO3_out - obj.delG0I_CO2_out)/(obj.RT*log(10));
             elseif obj.salt == 1
-                value = 5.86;
+%                  value = 5.86;
+                    value = 5.84;
             else
                 warning('salt is set to a value other than 0 or 1 in CCMParams.m')
             end
@@ -323,13 +328,13 @@ classdef CCMParams
             end
         end
         
-        function value = get.Hout(obj)
-%             Citotal = obj.Cout*(1+ 10^(-obj.pKa_eff_out)*(10^(obj.pKa1_out)...
-%                 +10^(-obj.pKa2_out + 2*obj.pH_out) + 10^(+obj.pH_out)));
-%             value = Citotal/(1+10^(obj.pKa_eff_out-obj.pH_out) ...
-%                 + 10^(-obj.pKa2_out+obj.pH_out) + 10^(obj.pKa1_out-obj.pH_out));
-            value = obj.Cout*10^(-obj.pKa_eff_out+obj.pH_out);
-        end
+%         function value = get.Hout(obj)
+% %             Citotal = obj.Cout*(1+ 10^(-obj.pKa_eff_out)*(10^(obj.pKa1_out)...
+% %                 +10^(-obj.pKa2_out + 2*obj.pH_out) + 10^(+obj.pH_out)));
+% %             value = Citotal/(1+10^(obj.pKa_eff_out-obj.pH_out) ...
+% %                 + 10^(-obj.pKa2_out+obj.pH_out) + 10^(obj.pKa1_out-obj.pH_out));
+%             value = obj.Cout*10^(-obj.pKa_eff_out+obj.pH_out);
+%         end
         
     end
         
