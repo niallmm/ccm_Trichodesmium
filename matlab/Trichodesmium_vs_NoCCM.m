@@ -1,6 +1,9 @@
 % Simulations for "Inorganic C and pH dependence of photosynthetic rates of
-% Trichodesmium 
+% Trichodesmium." experiments and paper by Tobias G. Boatman (1), Tracy Lawson (1), 
+% and Richard J. Geider (1). Simulations run by Niall Mangan (2)
 % parameters updated for Trichodesmium
+% (1) School of Biological Sciences, University of Essex, Wivenhoe Park, Colchester, Essex, CO4 3SQ, UK
+% (2) Department of Engineering Sciences and Applied Mathematics, Northwestern University, Evanston, IL, USA 60208.
 clear all
 close all
 changeplot
@@ -21,27 +24,46 @@ ccm_params.Km_meas = 145;    % half max concentration for CO2, uM
 ccm_params.S_sat = 45;      % specificity ratio
 ccm_params.KO_meas = 600;     % half max concentration for O2, uM
 
+nocsome_params.kRub = 1.92; 
+nocsome_params.Km_meas = 145;
+nocsome_params.S_sat = 45; 
+nocsome_params.KO_meas = 600;
+
 % update geometry
 ccm_params.Rb = 3.058e-4; %cm
 ccm_params.Rc = 1.5e-5; %cm
+
+nocsome_params.Rb = 3.058e-4; %cm
 
 % scale up number of RuBisCO using csome volume:
 ccm_params.NRub= NRub*ccm_params.Vcsome/baseV;
 % scale up number of CA using csome surface area:
 ccm_params.NCA = NCA*(4*pi*ccm_params.Rc^2)/baseSA;
 
+nocsome_params.NRub= ccm_params.NRub;
+nocsome_params.NCA = 1e-6;
+
 % set internal pH
 ccm_params.pH = 8.3; % internal pH
 ccm_params.pH_csome = 8.3; % internal pH
 ccm_params.pHoff = 0;
+
+nocsome_params.pH = 8.3;
+nocsome_params.pHoff=0;
+
 % salt water system:
 ccm_params.salt = 1;
+nocsome_params.salt = 1;
 
 % pH of 7.5 to 8.5, and external CO2 range of about 0.003 to 0.03 mmol/L-1.
 % set external pH
 ccm_params.pH_out = 7.5;
 ccm_params.Cout = 9; % 3 uM to 30 uM
 ccm_params.Hout = 1900;%ccm_params.Cout*10^(-ccm_params.pKa_eff_out+ccm_params.pH_out);
+
+nocsome_params.pH_out = 7.5;
+nocsome_params.Cout = 9;
+nocseom_params.Hout = 1900;
 
 % hack the equilibrium constant in the numerical simulation
 % this makes Keq the correct value for the internal pH
@@ -52,19 +74,25 @@ ccm_params.Kca = ccm_params.Vca*ccm_params.Kba/(ccm_params.Vba*ccm_params.Keq);
 ccm_params.kcC = 3e-5;
 ccm_params.kcH = 3e-5;
 
-
-
 % set jc for desired internal HCO3- concentration
 jc_opt = 3e-7; % for Hmax=  30 mM;
 ccm_params.jc = jc_opt*0.8;
 ccm_params.alpha = 0.2*jc_opt; %attribute some level activity to 
 % CO2->HCO3- conversion to sustain internal HCO3- levels
+nocsome_params.jc = 0;
+nocsome_params.alpha = 0;
 
 % run problem
 exec = FullCCMModelExecutor(ccm_params);
 num = exec.RunNumerical();
 % calculate fluxes from model output
 [fluxes] = calculate_fluxes(ccm_params, num);
+
+% run problem with no CCM
+exec2 = NoCsomeModelExecutor(nocsome_params);
+num2 = exec2.RunNumerical();
+
+[fluxes2] = calculate_fluxes(nocsome_params, num2);
 
 %plot concentration gradients in cell for these baseline values.
 figure(1)
@@ -73,6 +101,10 @@ hold on
 plot(num.r_cell, num.c_cyto_rad_mM)
 plot(num.r*ccm_params.Rc, num.h_mM(end,:))
 plot(num.r_cell, num.h_cyto_rad_mM)
+
+plot(num2.r*ccm_params.Rb, num2.c_mM(end,:))
+hold on
+plot(num2.r*ccm_params.Rb, num2.h_mM(end,:))
 %% fixed pH, varying totIC, %CO2 from 3 uM to 30 uM
 ccm_params.pH_out = 8.15;
 CO2extvary = linspace(0.05, 30,30);
@@ -87,19 +119,37 @@ for ii = 1:length(CO2extvary)
     C_csome1(ii) = num.c_csome_mM;
     H_csome1(ii) = num.h_csome_mM;
     fluxes(ii) = calculate_fluxes(ccm_params, num);
+    
+    nocsome_params.Cout=  ccm_params.Cout;
+    nocsome_params.Hout=ccm_params.Hout;
+    exec2 = NoCsomeModelExecutor(nocsome_params);
+    num2 = exec2.RunNumerical();
+    num2_save(ii) = num2;
+    C_cell1(ii) = num2.c_csome_mM;
+    H_cell1(ii) = num2.h_csome_mM;
+    fluxes2_save(ii) = calculate_fluxes(nocsome_params, num);
+
 end
-% 
+%%
 figure
-semilogy(CO2extvary, abs([fluxes.Hin_um]), 'Color',newcolor(8,8))
+semilogy(CO2extvary, C_csome1*1e3, 'o', 'Color',newcolor(2,8))
 hold on
-plot(CO2extvary, abs([fluxes.Hleak_um]), 'Color',newcolor(4,8))
-plot(CO2extvary, abs([fluxes.Cleak_um]), 'Color',newcolor(3,8))
-plot(CO2extvary, abs([fluxes.CratewO_um]),'Color',newcolor(1,8))
-xlabel('external CO_2 [mM]')
-ylabel('fluxes [uM/s] for model cell')
- legend('HCO_3^- transport', 'HCO_3^- leakage', 'CO_2 leakage', 'carboxylation')
-axis([min(CO2extvary) max(CO2extvary) 1e-15 1e-11])
- title('varying CO_2 fixed pH')
+plot(CO2extvary, C_cell1*1e3, 'o', 'Color',newcolor(1,8))
+line([0 30], [ccm_params.Km, ccm_params.Km])
+  xlabel('external CO_2 [uM]')
+ ylabel('CO_2 concentration near RuBisCO [uM]')
+ legend('CCM', 'no CCM')
+ legend boxoff
+%% CO2 fixation for both experiments
+ figure
+semilogy(CO2extvary, abs([fluxes.CratewO_um]),'o','Color',newcolor(2,8))
+hold on
+plot(CO2extvary, abs([fluxes2_save.CratewO_um]), 'o','Color',newcolor(1,8),'MarkerFaceColor', newcolor(1,8)) 
+ xlabel('external CO_2 [uM]')
+ ylabel('carboxylation rate [uM/s]')
+ legend('CCM', 'no CCM')
+ legend boxoff
+ 
 %% pH vary, CO2 vary
 pHextvary = linspace(7.52, 8.54, 20);
 ccm_params.Hout = 1900;
@@ -128,84 +178,3 @@ ylabel('fluxes [uM/s] for model cell')
 axis([min(CO2extvary1) max(CO2extvary1) 1e-14 5e-11])
  title('varying CO_2 varying pH')
  
- %% CO2 fixation for both experiments
- figure
-plot(CO2extvary1, abs([fluxes_ph_vary.CratewO_um]),'o','Color',newcolor(2,8))
-hold on
-plot(CO2extvary, abs([fluxes.CratewO_um]), 'o','Color',newcolor(1,8),'MarkerFaceColor', newcolor(1,8)) 
- xlabel('external CO_2 [uM]')
- ylabel('carboxylation rate [uM/s]')
- legend('pH varies', 'HCO_3^- varies')
- legend boxoff
- %% Plot as a function of HCO3-
- figure
- plot(Hout1, abs([fluxes.CratewO_um]), 'o','Color',newcolor(1,8),'MarkerFaceColor', newcolor(1,8)) 
- hold on
- plot(HCO3out,  abs([fluxes_ph_vary.CratewO_um]),'o','Color',newcolor(2,8))
- xlabel('external HCO_3^- [uM]')
- ylabel('carboxylation rate [uM/s]')
- legend('HCO_3^- varies', 'pH varies')
- legend boxoff
- %% plot as a function of HCO3- uptake - H leakage
- figure
- plot([fluxes.Hin_um]+[fluxes.Hleak_um], abs([fluxes.CratewO_um]), 'o','Color',newcolor(1,8),'MarkerFaceColor', newcolor(1,8)) 
- hold on
- plot([fluxes_ph_vary.Hin_um]+[fluxes_ph_vary.Hleak_um],  abs([fluxes_ph_vary.CratewO_um]),'o','Color',newcolor(2,8))
- xlabel('HCO_3^- uptake - HCO_3^- leakage [uM/s]')
- ylabel('carboxylation rate [uM/s]')
-  legend('HCO_3^- varies', 'pH varies')
-  legend boxoff
- 
- 
-%% compare numerical and analytic solutions for varying uptake rates
-jcvec= logspace(-8, -3, 20);
-
-for ii = 1:length(jcvec)
-    ccm_params.jc = jcvec(ii);
-    exec = FullCCMModelExecutor(ccm_params);
-     res = exec.RunAnalytical();
-    num = exec.RunNumerical();
-    
-   C_csome(ii) = num.c_csome_mM;
-    H_csome(ii) = num.h_csome_mM;
-     
-     C_csome_ana(ii) = res.c_csome_mM;
-     H_csome_ana(ii) = res.h_csome_mM;
-    
-end
-
-figure
-loglog(jcvec, C_csome,'o', 'MarkerFaceColor',newcolor(1,2))
-hold on
-loglog(jcvec, H_csome,'o', 'MarkerFaceColor',newcolor(2,2))
-loglog(jcvec, C_csome_ana,'-', 'MarkerFaceColor',newcolor(1,2))
-loglog(jcvec, H_csome_ana,'-', 'MarkerFaceColor',newcolor(2,2))
-
-xlabel('HCO_3^- transport [cm/s]')
-ylabel('CO_2 concentration [mM]')
-%% compare analytic and numerical solutions for varying carboxysome permeabilities
-kcvec= logspace(-7, 2, 30);
-ccm_params.jc = 1e-4;
-for ii = 1:length(kcvec)
-    ccm_params.kcC = kcvec(ii);
-    ccm_params.kcH = kcvec(ii);
-    exec = FullCCMModelExecutor(ccm_params);
-     res = exec.RunAnalytical();
-    num = exec.RunNumerical();
-    
-    C_csome(ii) = num.c_csome_mM;
-    H_csome(ii) = num.h_csome_mM;
-    
-    C_csome_ana(ii) = res.c_csome_mM;
-    H_csome_ana(ii) = res.h_csome_mM;
-    
-end
-
-figure
-loglog(kcvec, C_csome,'o', 'MarkerFaceColor',newcolor(1,2))
-hold on
-loglog(kcvec, H_csome,'o', 'MarkerFaceColor',newcolor(2,2))
-loglog(kcvec, C_csome_ana, '-', 'MarkerFaceColor', newcolor(1,2))
-loglog(kcvec, H_csome_ana, '-', 'MarkerFaceColor', newcolor(2,2))
-xlabel('carboxysome permeability [cm/s]')
-ylabel('CO_2 concentration [mM]')
