@@ -23,8 +23,8 @@
 
 Ccyto = (p.kmC*p.Cout - (p.alpha+p.kmC)*res.c_csome_uM)*(p.D/(p.kcC*p.Rc^2)+1/p.Rc -1./rb)/...
     ((p.alpha+p.kmC)*p.GC + p.D/p.Rb^2) + res.c_csome_uM;
-Hcyto = ((p.jc+p.kmH)*p.Hout + p.alpha*res.c_cyto_uM - p.kmH*res.h_csome_uM)*...
-    (p.D/(p.kcC*p.Rc^2)+1/p.Rc -1./rb)/(p.kmH*p.GH + p.D/p.Rb^2) + res.h_csome_uM;
+Hcyto = ((p.jc+p.kmH_out)*p.Hout + p.alpha*res.c_cyto_uM - p.kmH_in*res.h_csome_uM)*...
+    (p.D/(p.kcC*p.Rc^2)+1/p.Rc -1./rb)/(p.kmH_in*p.GH + p.D/p.Rb^2) + res.h_csome_uM;
     
 
 figure(5)

@@ -3,8 +3,8 @@ classdef CCMModelNumExecutor
     % stores and outputs data appropriately.
     properties
         ccm_params;     % CCMParams instance for running the model.
-        xnum =100; % number of spatial discritizations
-        finaltime = 200;        % total simulation time
+        xnum =200; % number of spatial discritizations
+        finaltime = 1000;        % total simulation time
         abstol = 1e-12;          % error tolerance
         reltol = 1e-13;
     end
@@ -35,7 +35,7 @@ classdef CCMModelNumExecutor
             %==========================================================================
             tic;
      
-            obj.ccm_params.pHoff = 1; % turn pH dependence of RuBisCO off to reduce computation time
+            %obj.ccm_params.pHoff = 1; % turn pH dependence of RuBisCO off to reduce computation time
             
             %==========================================================================
             % call ode solver obj contains all model parameters needed by
